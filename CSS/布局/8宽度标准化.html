@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宽度标准化</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        html{
+            /* 让1rem = 1px,以320宽度为基准 */
+            font-size: 0.3125vw;
+        }
+        /* 容器 */
+        .container{
+            width: 310rem;
+            margin: 0 auto;
+        }
+        /* 列表 */
+        .list{
+            margin-right: -5rem;
+        }
+        .box{
+            /* rem与px是等价的 */
+            width: 100rem;
+            height: 50rem;
+            background-color: pink;
+            margin-right: 5rem;
+            margin-bottom: 5rem;
+            float: left;
+        }
+        .big{
+            height: 105rem;
+            margin-bottom: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="list">
+            <div class="box big">001</div>
+            <div class="box">002</div>
+            <div class="box">003</div>
+            <div class="box">004</div>
+            <div class="box">005</div>
+        </div>
+    </div>
+</body>
+</html>
+
+
