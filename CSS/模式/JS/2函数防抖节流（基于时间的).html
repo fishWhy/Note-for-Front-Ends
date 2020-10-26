@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>函数防抖节流（基于时间的）</title>
+</head>
+<body>
+    <h1>1</h1>
+    <h1>2</h1>
+    <h1>3</h1>
+    <h1>4</h1>
+    <h1>5</h1>
+    <h1>6</h1>
+    <h1>7</h1>
+    <h1>8</h1>
+    <h1>9</h1>
+    <h1>10</h1>
+    <h1>11</h1>
+    <h1>12</h1>
+    <h1>13</h1>
+    <h1>14</h1>
+    <h1>15</h1>
+    <h1>16</h1>
+    <h1>17</h1>
+    <h1>18</h1>
+    <h1>19</h1>
+    <h1>20</h1>
+    <h1>21</h1>
+    <h1>22</h1>
+    <h1>23</h1>
+    <h1>24</h1>
+    <h1>25</h1>
+    <h1>26</h1>
+    <h1>27</h1>
+    <h1>28</h1>
+    <h1>29</h1>
+    <h1>30</h1>
+
+<script>
+
+// 定义数字
+var num = 0
+// 定义函数
+function demo(){
+    console.log(++num)
+}
+
+// 定义锁
+var lock = false;
+
+// 基于时间的节流
+window.onscroll = function(){
+    // // 为true的时候不能执行
+    // if(lock){
+    //     return ;
+    // }
+    // //设置锁
+    // lock = true;
+    // // 在1秒之内，无论触发多少次，只能执行一次
+    // demo();
+    // // 启动定时器
+    // setTimeout(function(){
+    //     //解除锁
+    //     lock = false;
+    // },1000)
+    throttle(demo)
+
+}
+
+//基于时间的在规定时间内执行
+//节流器方法
+function throttle(fn){
+    // 在函数自身添加锁
+    if(fn.__lock){
+        //被锁住了就不能执行了
+        return;
+    }
+    // 在1秒之内，无论触发多少次，只能执行一次
+    fn();
+    fn.__lock = true;
+    setTimeout(function(){
+        //解除锁
+        fn.__lock = false;
+    },1000)
+}
+
+
+</script>
+
+</body>
+</html>
