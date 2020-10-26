@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>碎片轮播图</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .list{
+            width: 560px;
+            height: 300px;
+            margin: 50px auto;
+            /* 子绝父相 */
+            position: relative;
+            overflow: hidden;
+            /* border: red solid 3px; */
+        }
+        .content{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 560px;
+            height: 300px;
+        }
+        .content .row{
+            height: 100px;
+            position: relative;
+        }
+        .content .row .col{
+            width: 112px;
+            height: 100px;
+            position: absolute;
+            display: inline-block;
+            /* background-color: pink; */
+            /* background-size: 100% 100%; */
+            /* 参考:https://www.runoob.com/cssref/pr-background-repeat.html */
+            background-repeat: no-repeat;
+            /* 背景image进行resize,参考：https://www.cnblogs.com/tugenhua0707/p/5260411.html */
+            background-size: 560px 300px;
+        }
+
+
+        .list img{
+            width: 560px;
+            height: 300px;
+            /* border: tan solid 3px; */
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+        .list img.choose{
+            display: block;
+        }
+
+        .prev,.next{
+            position:absolute;
+            top: 50%;
+            width: 30px;
+            height: 50px;
+            margin-top: -25px;
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.6);
+            font-size: 30px;
+            text-align: center;
+            line-height: 50px;
+        }
+        .prev{
+            left: 0;
+        }
+        .next{
+            right: 0;
+        }
+        .btns{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 30px;
+            text-align: center;
+        }
+        .btns span{
+            /* * */
+            /* border: red solid 3px; */
+            padding: 6px;
+            margin: 0 6px;
+            font-size: 0px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        .btns span.choose{
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="list">
+        <img class="choose" src="../../../img/slideshow/img0.jpg" alt="">
+        <img src="../../../img/slideshow/img1.jpg" alt="">
+        <img src="../../../img/slideshow/img2.jpg" alt="">
+        <img src="../../../img/slideshow/img3.jpg" alt="">
+        <img src="../../../img/slideshow/img4.jpg" alt="">
+        <div class="content"></div>
+        <div class="btns">
+            <span class="choose"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="prev">&lt</div>
+        <div class="next">&gt</div>  
+    </div>    
+
+    <script src="../../../library/jquery-3.5.1.js"></script>
+    <script>
+        var $content = $('.list .content')
+        var $img = $('.list img');
+        // 按钮
+        var $btns = $('.btns span')
+        // 维护当前显示图片的索引值
+        var index = 0;
+        var timebar;
+
+        // 通过循环创建15个div
+        for(var i=0;i<3;i++){
+            var row = $('<div class="row"></div>');
+            for (var j = 0;j<5;j++){
+                var col = $('<div class="col"></div>')
+                row.append(col)
+            }
+            $content.append(row)
+        }
+        $content.find('.col')
+            .each(function(el){
+                // console.log(el)
+                //设置背景图片位置
+                $(this).css({
+                    backgroundPositionX:-112*(el%5),
+                    backgroundPositionY:-100*parseInt(el/5),
+                    left:112*(el%5)
+                    })
+                // $(this).css('border','black solid 1px')
+        });
+       
+        function doAnimation(){
+            $content.find('.col').css({
+                backgroundImage:'url(../../../img/slideshow/img'+index+'.jpg)',
+                width:0,
+                height:0,
+                opacity:0
+            }).each(function(){
+                // 每一个元素设置不同时间的动画
+                $(this).stop(true).animate({
+                     width:122,
+                     height:112,
+                     opacity:1
+                 },200+2000*Math.random())
+            })            
+            $btns.eq(index).addClass('choose').siblings().removeClass('choose')
+        }
+        
+        function startInterval(){
+            timebar = setInterval(function(){
+                $img.eq(index).addClass('choose').siblings().removeClass('choose')
+                index = (index+1)%$img.length;
+                doAnimation();
+            },3000)
+        }
+        startInterval();
+
+        // 点击下一张图
+        $('.next').click(function(){
+            clearInterval(timebar)
+            $img.eq(index).addClass('choose').siblings().removeClass('choose')
+            index = (index+1)%$img.length;
+            doAnimation()
+            startInterval()
+        })
+
+        // 点击上一张图
+        $('.prev').click(function(){
+            clearInterval(timebar)
+            $img.eq(index).addClass('choose').siblings().removeClass('choose')
+            index = (index+$img.length-1)%$img.length;
+            doAnimation()
+            startInterval()
+        })
+
+        
+        // 点击小圆点
+        $btns.click(function(){
+            clearInterval(timebar);
+            $img.eq(index).addClass('choose').siblings().removeClass('choose');
+            index = $(this).index();
+            console.log(index);
+            doAnimation();
+            startInterval();
+        })
+
+        
+
+
+    </script>
+</body>
+</html>

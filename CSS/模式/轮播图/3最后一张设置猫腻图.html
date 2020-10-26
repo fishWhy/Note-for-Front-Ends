@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最后一张设置猫腻图</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .list{
+            width: 560px;
+            height: 300px;
+            margin: 50px auto;
+            /* 子绝父相 */
+            position: relative;
+            overflow: hidden;
+            /* border: red solid 3px; */
+        }
+        .content{
+            width: 4000px;
+            height: 300px;
+            /* 换行引起空格，使用font-size:0消除 */
+            font-size: 0;
+
+            position: absolute;
+            left: 0px;
+            /* border: green solid 3px; */
+        }
+        .content img{
+            width: 560px;
+            height: 300px;
+            /* border: tan solid 3px; */
+           
+        }
+        .prev,.next{
+            position:absolute;
+            top: 50%;
+            width: 30px;
+            height: 50px;
+            margin-top: -25px;
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.6);
+            font-size: 30px;
+            text-align: center;
+            line-height: 50px;
+        }
+        .prev{
+            left: 0;
+        }
+        .next{
+            right: 0;
+        }
+        .btns{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 30px;
+            text-align: center;
+        }
+        .btns span{
+            /* * */
+            /* border: red solid 3px; */
+            padding: 6px;
+            margin: 0 6px;
+            font-size: 0px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        .btns span.choose{
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="list">
+        <div class="content">
+            <img src="../../../img/slideshow/img1.jpg" alt="">
+            <img src="../../../img/slideshow/img2.jpg" alt="">
+            <img src="../../../img/slideshow/img3.jpg" alt="">
+            <img src="../../../img/slideshow/img4.jpg" alt="">
+            <img src="../../../img/slideshow/img5.jpg" alt="">
+
+            <img src="../../../img/slideshow/img1.jpg" alt="">
+        </div>
+        <div class="btns">
+            <span class="choose"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="prev">&lt</div>
+        <div class="next">&gt</div>  
+    </div>    
+
+    <script src="../../../library/jquery-3.5.1.js"></script>
+    <script>
+        var $content = $('.content');
+        // 按钮
+        var $btns = $('.btns span')
+        // 维护当前显示图片的索引值
+        var index = 0;
+
+        var timebar;
+        function startInterval(){
+              //循环定时器
+            timebar = setInterval(function(){
+            //显示下一张
+            index = (index+1)%6;
+            change();
+        },3000)
+        }
+
+        function change(fn){
+            
+            //先清空动画队列，要不然点击两次next会连续跳两张*//
+            $content.stop(true).animate({left:-560*index},500,function(){
+
+                //最后一张是猫腻图，更换成第一张
+                if(index ===5 ){
+                    index = 0;
+                    $content.css('left',0)
+                }
+                // 更新小圆点
+                $btns.eq(index).addClass('choose').siblings().removeClass('choose')
+                //启动轮播
+                fn && fn();
+            })
+        }
+        startInterval();
+        // *//
+        // 点击小圆点，切换图片
+        $btns.click(function(){
+            //清除循环轮播
+            clearInterval(timebar)
+            //获取按钮索引值
+            index = $(this).index();
+            // console.log(index)
+            //更改content位置
+            //修改按钮样式
+            change(startInterval);
+        })
+
+        //下一张
+        $('.next').click(function(){
+            //清除定时器
+            clearInterval(timebar)
+            //更改索引值
+            index = (index+1)%6;
+            //切换图片
+            change(startInterval);
+        })
+        //上一张
+        $('.prev').click(function(){
+            //清除定时器
+            clearInterval(timebar)
+            //更改索引值
+            index = (index+5)%6;
+            //切换图片
+            // 如果是第一张，要显示最后一张猫腻图
+            if(index ===5 ){
+                $content.css('left',-560*index)
+                index = 4;
+            }
+            change(startInterval);
+        })
+
+    </script>
+</body>
+</html>
