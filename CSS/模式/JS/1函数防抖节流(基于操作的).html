@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>函数防抖节流（基于操作的）</title>
+</head>
+<body>
+    <h1>1</h1>
+    <h1>2</h1>
+    <h1>3</h1>
+    <h1>4</h1>
+    <h1>5</h1>
+    <h1>6</h1>
+    <h1>7</h1>
+    <h1>8</h1>
+    <h1>9</h1>
+    <h1>10</h1>
+    <h1>11</h1>
+    <h1>12</h1>
+    <h1>13</h1>
+    <h1>14</h1>
+    <h1>15</h1>
+    <h1>16</h1>
+    <h1>17</h1>
+    <h1>18</h1>
+    <h1>19</h1>
+    <h1>20</h1>
+    <h1>21</h1>
+    <h1>22</h1>
+    <h1>23</h1>
+    <h1>24</h1>
+    <h1>25</h1>
+    <h1>26</h1>
+    <h1>27</h1>
+    <h1>28</h1>
+    <h1>29</h1>
+    <h1>30</h1>
+
+<script>
+
+// 定义数字
+var num = 0
+// 定义函数
+function demo(){
+    console.log(++num)
+}
+// 定义定时器句柄
+// var timebar;
+// 高频事件
+window.onscroll = function(){
+    // 基于操作的，在高频事件中，执行最后一次。
+    // 将函数在定时器中，每次触发事件，取消执行。
+    // clearTimeout(timebar)
+    // // 直到最后一次
+    // timebar = setTimeout(demo, 200)
+    // // 这种基于操作的节流也被称为防抖
+    
+    // 使用防抖函数
+    throttle(demo)
+}
+
+//基于操作的在最后一次执行
+// 封装防抖节流函数
+function throttle(fn){
+    // 清除定时器
+    clearTimeout(fn.__timebar);
+    // 执行定时器
+    // 函数也属于对象，因此可以添加属性
+    fn.__timebar = setTimeout(fn,200);
+}
+
+
+</script>
+
+</body>
+</html>
