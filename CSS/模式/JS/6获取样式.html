@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取样式</title>
+</head>
+<body>
+    
+    <script>
+        
+/***
+* 封装一个getStyle方法，可以在不同浏览器下获取样式（解决兼容性问题）。
+* @obj     元素对象
+* @key     属性名称
+* return   获取的样式
+*/
+function getStyle(obj, key){
+   // 能力检测，判断浏览器的能力，能做什么就做什么
+   // 浏览器是否支持getComponent方法，支持就使用
+   if(window.getComputedStyle){
+       // 方法一
+       return getComputedStyle(obj)[key];
+   } else {
+       var style = obj.currentStyle;
+       //如果有样式，可以获取
+       if(style){
+           //将横杠法转成驼峰式命名法  border-left-color => borderLeftColor
+           key = key.replace(/-([a-z])?/g, function(match, $1){
+               return $1.toUpperCase();
+           })
+           return style[key]
+       } else {
+           // 没有样式，要提示
+           alert('你的浏览器不支持获取计算样式功能。')
+       }
+   }
+}
+    </script>
+</body>
+</html>
+
+

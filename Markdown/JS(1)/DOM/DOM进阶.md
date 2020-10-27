@@ -36,8 +36,9 @@ childNodes属性：该属性指向一个节点的所有子节点的集合。<br>
         console.log(app.nodeType)//1   
         console.log(document.nodeType)//9
     </script>
-    
-    
+
+
+​    
 &emsp;&emsp;注意：如下例，我们明明书写了3个节点，但是在有些高级浏览器中却输出5个节点。原因是在高级浏览器中，空白折叠现象形成的空白符会当做一个文本节点存在<br>
 
     <div id='box'>
@@ -76,7 +77,7 @@ childNodes属性：该属性指向一个节点的所有子节点的集合。<br>
         console.log(getNode(box));
         
     </script>
-    
+
 ## 2.节点属性
 
     节点三个常用属性
@@ -141,9 +142,10 @@ childNodes属性：该属性指向一个节点的所有子节点的集合。<br>
     节点克隆：
         使用方式：node.cloneNode(bool)
             bool:是一个布尔值，默认是一个false只复制自身，如果传递的是true表示连同子节点一起复制  
-            
-    
-    
+
+
+​    
+​    
     例1，创建节点，节点上树，节点下树，节点插入:
     <div id='app'>
         <div>1<div>
@@ -155,8 +157,9 @@ childNodes属性：该属性指向一个节点的所有子节点的集合。<br>
         //创建元素节点
         var h1 = document.createElement('h1')
         var app = document.getElementById('app')
-        
-        
+
+
+​        
         //元素节点h1上树
         app.appendChild(h1)
         
@@ -168,9 +171,10 @@ childNodes属性：该属性指向一个节点的所有子节点的集合。<br>
         
         //通过innerHTML向h1添加内容时，内容中的标签也能被渲染出来
         h1.innerHTML = 'hello <strong>world!</strong>'
-        
-        
-        
+
+
+​        
+​        
         //将h1从app中移除
         var result = app.removeChild(h1)
         console.log(result);
@@ -179,10 +183,11 @@ childNodes属性：该属性指向一个节点的所有子节点的集合。<br>
         var result = app.insertBefore(h1,app.childNodes[2])
         
         //可以使用上面的这些添加节点的方法自己封装些函数，用来在 子元素前面插入元素，  在元素后面插入元素
-        
-        
+
+
+​        
     <script>
-    
+
 ## 4.jQuery中的节点操作
 创建元素：可以利用$函数的功能创建一个元素。<br>
 jQuery中的上树方法：在jquery中上树的方式有很多种，可以是父元素选择子元素，可以是子元素选择父元素，还可以是兄弟选择兄弟<br>
@@ -208,8 +213,9 @@ jQuery中的上树方法：在jquery中上树的方式有很多种，可以是�
     清空后代：empty
     删除元素：remove
     克隆元素：clone(bool)  //bool是一个布尔值，默认是false，连同子节点一起复制，如果传递true，连同子元素及其事件一起复制
-        
-        
+
+
+​        
         <div id='app'>
             <div>1</div>
             <div>2</div>
@@ -242,8 +248,9 @@ jQuery中的上树方法：在jquery中上树的方式有很多种，可以是�
         </div>
         //若再进行 （去外包装恢复原样）
          $('#app div').upwrapAll('<div class='dom'/>')
-         
-    
+
+
+​    
 ## 5.更改this指向
 call与apply这两个方法都是函数天生可以调用的方法，它们的作用是执行函数并改变函数的上下文对象（this）。<br>
 &emsp;&emsp;正常情况下：谁调用函数，函数的this就指向谁<br>
@@ -321,6 +328,7 @@ this指向<br>
 this指向<br>
 &emsp;&emsp;&emsp;&emsp;dom0级：触发事件的对象。attachEvent：指向window<br>
 <br><br>
+
 ### <font color=red>DOM2级事件移除方式:</font>
 事件移除方式：使用removeEventListener方式<br>
 &emsp;&emsp;该方法用于移除addEventListener绑定的事件<br>
@@ -347,17 +355,17 @@ DOM0级事件是通过元素的属性型式绑定的，因此删除该元素即�
 &emsp;&emsp;&emsp;&emsp;fn:执行函数<br>    
 &emsp;&emsp;&emsp;&emsp;使用方式与removeEventListener是一致的，只不过没有了第三个参数而已<br>    
 
-
 <font color='red'>
 总结：
 1.匿名函数无法移除，因此为了能够顺利的移除事件，要为回调函数起名字。<br>
 2.当绑定多个事件的时候，移除的事件对其它事件没有影响。<br>
 3.detachEvent不能移除DOM0级事件，DOM0级事件可以通过dom.onclick=null形式删除。<br>
+
 4. 相同事件回调函数多次绑定，会共存，删除的时候要删除多次。
 
 </font>
 
-    
+
     <div id='box1'>box1
         <div id='box2'>box2
             <div id='box3'>box3</div>
@@ -367,8 +375,9 @@ DOM0级事件是通过元素的属性型式绑定的，因此删除该元素即�
     var box1 = document.getElementById('box1');
     var box2 = document.getElementById('box2');
     var box3 = document.getElementById('box3');
-    
-    
+
+
+​    
     //若为：
     //之前学习的事件绑定，属于DOM0级事件绑定。
     //DOM0级事件帮定中，是在事件冒泡阶段执行的。
@@ -411,9 +420,10 @@ DOM0级事件是通过元素的属性型式绑定的，因此删除该元素即�
     box3.addEventListener('click',function(){
         console.log('box3');
      },true)
-     
-     
-     
+
+
+​     
+​     
      <button id= 'btn'> 按钮</button>
     
     <script>
@@ -436,9 +446,10 @@ DOM0级事件是通过元素的属性型式绑定的，因此删除该元素即�
         btn.addEventListener('click',function(){
             console.log('addEventListener2',222, this)
         })
-        
-        
-        
+
+
+​        
+​        
         var obj = {
             fun: function(){
                 console.log('123',this)
@@ -506,8 +517,9 @@ attachEvent事件：可以将事件对象传递到事件函数中<br>
         //阻止事件冒泡
         e.stopPropagation();
     })
-    
-    
+
+
+​    
     //IE 阻止事件冒泡
     btn.attachEvent('onclick',function(e){
         e.cancelBubble = true;

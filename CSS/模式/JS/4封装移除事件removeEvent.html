@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>封装移除事件removeEvent方法</title>
+</head>
+<body>
+    <button id="id">按扭</button>
+    <script src="../../../library/ickt.js"></script>
+    <script>
+        var btn = document.getElementById('id');
+        bindEvent(btn,'click',function(){
+            console.log('111')
+        })
+        bindEvent(btn,'click',function(){
+            console.log('222')
+        })
+
+        //移除事件
+         /** DOM进阶-事件流程，移除事件兼容所有浏览器
+         * 实现removeEvent,不同浏览器下，不同的事件级别下 移除事件都一致了。
+         *@dom    元素
+         *@type   事件类型
+         *@fn     事件回调函数
+        **/
+        function removeEvent(dom, type, fn){
+            // 能力检测
+            if(dom.removeEventListener){
+                //针对DOM2
+                dom.removeEventListener(type, fn);
+            } else if(dom.detachEvent){
+                // 针对IE
+                dom.detachEvent('on' + type, fn)
+            } else {
+                // 针对DOM0
+                dom['on' + type] = null;
+            }
+        }
+
+    </script>
+</body>
+</html>
+
+
+

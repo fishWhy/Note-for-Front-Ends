@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>封装事件绑定bindEvent方法</title>
+</head>
+<body>
+    <button id="id">按扭</button>
+    <script>
+        var btn = document.getElementById('id');
+        bindEvent(btn,'click',function(){
+            console.log('111')
+        })
+        bindEvent(btn,'click',function(){
+            console.log('222')
+        })
+        /** DOM进阶-事件流程，绑定事件兼容所有浏览器
+         * 实现bindEvent,不同浏览器下，不同的事件级别下 绑定的事件都一致了。
+         *   同一事件都可以绑定多个响应函数，this都指向触发事件的元素，都有事件对象
+         *@dom    元素
+         *@type   事件类型
+         *@fn     事件回调函数
+        **/
+        function bindEvent(dom, type, fn){
+            // 能力检测,判断方法是否存在，存在的话使用，不存在就不使用
+            if(dom.addEventListener){
+                // 针对dom2级绑定方式,都在冒泡阶段触发
+                dom.addEventListener(type, fn, false);
+            } else if(dom.attachEvent){
+                // 针对ie绑定事件
+                //  由于在attachEvent绑定事件this指向是window，因此这里需要改变this指向和DOM2一样指向触发事件的对象
+                dom.attachEvent('on' + type, function(e){
+                    // 让fn在dom上执行
+                   fn.call(dom,e) 
+                });
+            } else {
+                // 针对dom0级绑定方式
+                // 缓存type事件原有的事件回调函数防止覆盖，再绑定一个新的事件回调函数用来执行原有的事件回调函数和新的回调函数
+                var oldFn = dom['on' + type];
+                // 在dom0级事件中，IE中并没有将事件对象传递到事件函数中，事件对象存储在window上，所以要传递window.event
+                dom['on' + type] = function(e){
+                    //如果type事件已经绑定过，先执行之前绑定的
+                    oldFn&&oldFn(e || window.event);
+                    //再执行新的
+                    fn(e || window.event);
+                }
+            }
+        }
+
+
+    </script>
+</body>
+</html>
+
+
+

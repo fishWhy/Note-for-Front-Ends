@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实现animate方法</title>
+    <style>
+        #box {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn">按钮</button>
+    <div id="box"></div>
+    
+    <script src="../../../library/ickt.js"></script>
+    <script>
+        // 点击按钮，让盒子移动
+        var btn = document.getElementById('btn');
+        var box = document.getElementById('box');
+        // 绑定事件
+        btn.onclick = function(){
+            animate(box,{
+                left:'400px',
+                top:400
+            }, 1000, function(){
+                console.log('success')
+            })
+        }
+
+        /*** 
+         * 实现animate(注意，这里只实现了样式对应值单位为px的那些)
+         * 
+         * 在规定时间内，完成动画。
+         * 以移动一个方块为例：
+         *   假设每30ms移动一次(取30ms,是因为人眼的视觉效果)，
+         *   每次移动的距离：步长 = 移动的总距离/移动的总次数
+         *   移动的总次数 = 总时长/移动的间隔
+         * 
+         * @dom     操作的元素
+         * @obj     样式对象
+         * @time    时间
+         * @callback 动画执行完毕，执行的回调函数
+         * 
+         * ***/
+        function animate(dom, obj, time, callback) {
+
+            // 已经移动的次数
+            var count = 0;
+            // 计算总次数，不取整不影响结果
+            var total = parseInt((time || 1000)/30);
+            //总距离的获取必要条件是，最终的样式与当前的样式。
+            // 当前样式通过元素获取
+            // 最终样式，通过obj参数获取
+            // 获取当前样式
+            var style = {}
+            //遍历需要获取的样式
+            for(var key in obj){
+                // 存储当前样式
+                // 为计算方便，存储数字，而不是字符串
+                style[key] = parseInt(getStyle(dom, key))
+            }
+            // 获取每一个样式的步长
+            var step = {};
+            //遍历所需要的获取步长的样式
+            for (var key in obj){
+                // 存储步长
+                step[key] = (parseInt(obj[key]) - style[key]) / total;
+            }
+            //执行动画就是执行setInterval,当达到总次数的时候，终止动画的执行
+            
+            //启动定时器
+            //定义动画句柄
+            var timebar = setInterval(function(){
+                //更新次数
+                count++;
+                //修改样式
+                for (var key in obj){
+                    dom.style[key] = style[key] + step[key] * count + 'px';
+                }
+                //判断终止条件
+                if(count >= total){
+                    //修正样式
+                    for (var key in obj){
+                        // 判断属性值是否是字符串,是字符串直接复制，不是则加上单位
+                        dom.style[key] = typeof obj[key] === 'string' ? obj[key] : obj[key] + 'px';
+                    }
+                    clearInterval(timebar);
+                    // 传递了callback要执行callback
+                    callback && callback();
+                }
+            },30)
+        }
+
+    </script>
+</body>
+</html>
