@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>构造函数</title>
+</head>
+<body>
+    <script>
+
+// 构造函数
+// 构造函数与普通函数在定义方式上没有不用，只不过构造函数的首字母要大写(这并不是语法要求）
+// 构造函数必须使用new关键字进行调用
+// 通过构造函数可以创建一类对象，该构造函数就称之为类，创建的对象称之为该类的实例化对象。
+
+// function Person(){...}
+// function Dog(){...}
+// var p = new Person();
+// var d = new Dog();
+// console.log(p,d);//输出Person{...},Dog{...}
+
+// 与普通函数比较
+//目的：    普通函数：实现某一类功能；   构造函数：为了创建对象
+// 调用方式：  普通函数：直接调用；   构造函数：使用new进行调用 
+
+
+// 构造函数执行时候的四个步骤： 
+// 1.开辟一个新的内存空间
+
+// 2.改变this指向 
+// //普通函数
+// function person(){
+//     console.log(this)
+// }
+// person()//输出结果为 Window
+// //构造函数
+// function Person(){
+//     console.log(this)
+// }
+// new Person()//输出结果为Person 
+
+// 3.执行函数中的代码，为this赋值<br>
+ // //构造函数
+// function Person(name, sex, age){
+//     this.name = name;
+//     this.sex = sex;
+//     this.age = age;
+// } 
+
+// 4.返回this<br> 
+// //构造函数
+// function Person(name, sex, age){
+//     this.name = name;
+//     this.sex = sex;
+//     this.age = age;
+//     //返回其他数据
+//     //如果是值类型没有影响，(数字，字符串，布尔值，undefined,null，对象)
+//     //例如：return 100；  return 'hello';  return true;  return undefined; return nulll。在var p = new Person（...）时，p仍旧是Person不受其他的影响。    
+//     //返回对象，实例对象会被替代
+//     //例如： return {'color':red}, return [1,2,3],  return function demo(){}。在var p = new Person（...）时，p仍旧是会受其他的影响。但可以返回this。
+// } 
+    </script>
+</body>
+</html>

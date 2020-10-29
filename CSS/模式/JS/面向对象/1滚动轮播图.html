@@ -21,13 +21,13 @@
             height: 300px;
             position: relative;
             left: -560px;
+            font-size: 0;
         }
         li{
             width: 560px;
             height: 300px;
             background-size: 560px 300px;
             display: inline-block;
-            font-size: 0;
         }
         li:nth-child(1){
             background-image: url('../../../../img/slideshow/img4.jpg');
@@ -71,31 +71,60 @@
         // 获取元素
         var box = document.getElementById('box')
         var ul = document.getElementsByTagName('ul')[0]
-        // 当前图片的索引值（不考虑猫腻图）
-        var id = 0;
+        // 当前图片的索引值
+        var id = 1;
+
+        var lock = false;
         // 显示右侧图片
         function showRight(){
+            // 如果锁住了不执行
+            if(lock){
+                return;
+            }
+            lock = true;
             
-            id = (++id)%5;
+            id = (++id)%7;
             // 先执行动画，再调节索引值
-            animate(ul,{left:-560*(id+1)},1000,function(){
+            ickt.animate(ul,{left:-560*id},1000,function(){
+                // ul.style({left:-560})
                 console.log('success')
+                lock = false;
+                if(id === 6){
+                    // 修改样式
+                    ickt.css(ul,'left','-560px');
+                    id = 1;
+                }
+
             })
             
         }
         // 显示左侧图片
         function showLeft(){
-            id = (id+4)%5;
+            // 如果锁住了不执行
+            if(lock){
+                return;
+            }
+            lock = true;
+
+            id = (id+6)%7;
             // 先执行动画，再调节索引值
-            animate(ul,{left:-560*(id+1)},1000,function(){
+            ickt.animate(ul,{left:-560*id},1000,function(){
                 console.log('success')
+                if(id === 0){
+                    // 修改样式
+                    ickt.css(ul,'left','-2800px');
+                    id = 5;
+                }
+
+                lock = false;
+
             })
         }
         //滚轮事件回调函数
         function deal(e){
             //判断滚轮方向
             if(e.wheelDelta){
-                //如果是线上划，显示下一张
+                //如果是向上划，显示下一张
                 if(e.wheelDelta>0){
                     showRight();
                 } else {
@@ -112,14 +141,14 @@
 
         }
         // 给box绑定鼠标移入移出事件
-        bindEvent(box,'mouseenter',function(){
+        ickt.bindEvent(box,'mouseenter',function(){
             //监听滚轮事件
-            bindEvent(document,'mousewheel',deal)
+            ickt.bindEvent(document,'mousewheel',deal)
         })
         //鼠标移出
-        bindEvent(box,'mouseleave',function(){
+        ickt.bindEvent(box,'mouseleave',function(){
             // 移除滚轮事件
-            removeEvent(document,'mousewheel',deal)
+            ickt.removeEvent(document,'mousewheel',deal)
         })
 
 

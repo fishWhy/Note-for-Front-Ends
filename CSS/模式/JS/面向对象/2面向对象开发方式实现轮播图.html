@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滚动轮播图</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        #box {
+            width: 560px;
+            height: 300px;
+            margin: 50px auto;
+            overflow: hidden;
+        }
+        ul {
+            width: 4000px;
+            height: 300px;
+            position: relative;
+            left: -560px;
+            font-size: 0;
+        }
+        li{
+            width: 560px;
+            height: 300px;
+            background-size: 560px 300px;
+            display: inline-block;
+        }
+        li:nth-child(1){
+            background-image: url('../../../../img/slideshow/img4.jpg');
+        }
+        li:nth-child(2){
+            background-image: url('../../../../img/slideshow/img0.jpg');
+        }
+        li:nth-child(3){
+            background-image: url('../../../../img/slideshow/img1.jpg');
+        }
+        li:nth-child(4){
+            background-image: url('../../../../img/slideshow/img2.jpg');
+        }
+        li:nth-child(5){
+            background-image: url('../../../../img/slideshow/img3.jpg');
+        }
+        li:nth-child(6){
+            background-image: url('../../../../img/slideshow/img4.jpg');
+        }
+        li:nth-child(7){
+            background-image: url('../../../../img/slideshow/img0.jpg');
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    
+    <script src="../../../../library/jquery-3.5.1.js"></script>
+    <script src="../../../../library/ickt.js"></script>
+    <script>
+        // 定义对象，所有需要访问属性以及方法的地方，通过this方法，
+        var obj = {
+            // 将变量转成属性
+            box: document.getElementById('box'),
+            ul: document.getElementsByTagName('ul')[0],
+                // 当前图片的索引值
+            id: 1,
+            lock: false,
+
+            // 将函数转成方法
+
+            // 显示右侧图片
+            showRight: function(){
+                // 如果锁住了不执行
+                if(this.lock){
+                    return;
+                }
+                this.lock = true;
+                
+                this.id = (++this.id)%7;
+                // 缓存外部this
+                var me = this;
+                // 先执行动画，再调节索引值
+                ickt.animate(this.ul,{left:-560*this.id},1000,function(){
+                    // ul.style({left:-560})
+                    console.log('success')
+                    me.lock = false;
+                    if(me.id === 6){
+                        // 修改样式
+                        ickt.css(me.ul,'left','-560px');
+                        me.id = 1;
+                    }
+                })
+            },
+            // 显示左侧图片
+            showLeft: function(){
+                // 如果锁住了不执行
+                if(this.lock){
+                    return;
+                }
+                this.lock = true;
+
+                this.id = (this.id+6)%7;
+                // 缓存外部this
+                var me = this;
+                // 先执行动画，再调节索引值
+                ickt.animate(this.ul,{left:-560*this.id},1000,function(){
+                    console.log('success')
+                    if(me.id === 0){
+                        // 修改样式
+                        ickt.css(me.ul,'left','-2800px');
+                        me.id = 5;
+                    }
+                    me.lock = false;
+                })
+            },
+            //滚轮事件回调函数
+            deal: function(e){
+                //判断滚轮方向
+                if(e.wheelDelta){
+                    //如果是向上划，显示下一张
+                    if(e.wheelDelta>0){
+                        this.showRight();
+                    } else {
+                        this.showLeft();
+                    }
+                } else {
+                    // 如果值为负表示向上划
+                    if(e.detail<0){
+                        this.showRight();
+                    }else {
+                        this.showLeft()
+                    }
+                }
+
+            },
+            // 定义启动
+            init: function(){
+                // 缓存外部this
+                var me = this;
+                //修改回调函数,这里是从demo中this的角度考虑的，让demo的this指向me
+                function demo(e){
+                    me.deal(e);
+                }
+                // 给box绑定鼠标移入移出事件
+                ickt.bindEvent(this.box,'mouseenter',function(){
+                    //监听滚轮事件
+                    ickt.bindEvent(document,'mousewheel',demo)
+                });
+                //鼠标移出
+                ickt.bindEvent(this.box,'mouseleave',function(){
+                    // 移除滚轮事件
+                    ickt.removeEvent(document,'mousewheel',demo)
+                });
+            }
+       
+        }
+        // 执行对象的启动方法
+        obj.init();        
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>封装设置样式</title>
+</head>
+<body>
+    <script>
+        
+/***封装一个设置样式的方法
+ * 两种用法 css（dom, width, '200px')  css(dom, {color:'red','width':'200px})
+ * 
+*/
+    function css(dom, key, value){
+        // 判断key是对象还是字符串
+        if(typeof key === 'string'){
+            // 设置样式
+            dom.style[key] = value;
+        } else {
+            // 遍历每组样式
+            for(var name in key){
+                //name表示属性名称，key[name]表示样式值
+                css(dom, name, key[name]);
+            }
+        }
+    }
+    </script>
+</body>
+</html>

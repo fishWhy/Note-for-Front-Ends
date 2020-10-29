@@ -1,10 +1,10 @@
-var ickt = (function(){
-var ickt = {};
+
+
 /***由于有些浏览器会将换行符显示成空格，有些不是
  * 这里解决兼容性问题，让所有浏览器显示的一致
  * 让所有浏览器都输出3，忽略换行符。即过滤掉为换行符的文本节点
 */
-ickt.dom = function(){
+function dom(){
     // 返回所有包含节点的数组
     var arr = [];
     //定义正则
@@ -27,14 +27,13 @@ ickt.dom = function(){
     return arr;
 }
 
-
 /***
  * 在元素后面插入元素
  * @parent  父元素
  * @child   插入的子元素
  * @next    参考元素
  */
-ickt.insertAfter = function(parent, child, next){
+function insertAfter(parent, child, next){
     //插入
     return parent.insertBefore(child, next.nextsibling)
 }
@@ -43,31 +42,34 @@ ickt.insertAfter = function(parent, child, next){
  * @parent  父元素
  * @child   插入的子元素
  */
-ickt.insertAfter = function(parent, child){
+function insertAfter(parent, child){
     //插入
     return parent.insertBefore(child, parent.firstChild);
 }
 
 // 在dom2后面插入dom1
-ickt.after = function(dom1,dom2){
+function after(dom1,dom2){
     // 找到dom2的父元素
     // 找到dom2的下一个兄弟列表
     return dom2.parentNode.insertBefore(dom1,dom2.nextsibling);
 }
 
 // 在dom2前面插入dom1
-ickt.before = function(dom1,dom2){
+function before(dom1,dom2){
     // 找到dom2的父元素
     // 使用insertBefore插入
     return dom2.parentNode.insertBefore(dom1,dom2);
 }
 
 
+
+
+
 /***封装一个设置样式的方法
  * 两种用法 css（dom, width, '200px')  css(dom, {color:'red','width':'200px})
  * 
 */
-ickt.css = function(dom, key, value){
+function css(dom, key, value){
     // 判断key是对象还是字符串
     if(typeof key === 'string'){
         // 设置样式
@@ -76,7 +78,7 @@ ickt.css = function(dom, key, value){
         // 遍历每组样式
         for(var name in key){
             //name表示属性名称，key[name]表示样式值
-            this.css(dom, name, key[name]);
+            css(dom, name, key[name]);
         }
     }
 }
@@ -90,7 +92,7 @@ ickt.css = function(dom, key, value){
  * @key     属性名称
  * return   获取的样式
  */
-ickt.getStyle = function(obj, key){
+function getStyle(obj, key){
     // 能力检测，判断浏览器的能力，能做什么就做什么
     // 浏览器是否支持getComponent方法，支持就使用
     if(window.getComputedStyle){
@@ -114,7 +116,7 @@ ickt.getStyle = function(obj, key){
 
 //基于操作的在最后一次执行,节流防抖
 // 封装防抖节流函数
-ickt.throttle_event = function(fn){
+function throttle_event(fn){
     // 清除定时器
     clearTimeout(fn.__timebar);
     // 执行定时器
@@ -124,7 +126,7 @@ ickt.throttle_event = function(fn){
 
 // 基于时间的在规定时间内执行，节流防抖
 //节流器方法
-ickt.throttle = function(fn){
+function throttle(fn){
     // 在函数自身添加锁
     if(fn.__lock){
         //被锁住了就不能执行了
@@ -141,7 +143,7 @@ ickt.throttle = function(fn){
 
 
 //获取属性单位
-ickt.p = function(key){
+function p(key){
     return key === 'opacity' ? '':'px';
 }
 
@@ -160,7 +162,7 @@ ickt.p = function(key){
   * @callback 动画执行完毕，执行的回调函数
   * 
   * ***/
- ickt.animate = function(dom, obj, time, callback) {
+ function animate(dom, obj, time, callback) {
      // 已经移动的次数
      var count = 0;
      // 计算总次数，不取整不影响结果
@@ -174,7 +176,7 @@ ickt.p = function(key){
      for(var key in obj){
          // 存储当前样式
          // 为计算方便，存储数字，而不是字符串
-         style[key] = parseInt(this.getStyle(dom, key))
+         style[key] = parseInt(getStyle(dom, key))
      }
      // 获取每一个样式的步长
      var step = {};
@@ -184,7 +186,6 @@ ickt.p = function(key){
          step[key] = (parseInt(obj[key]) - style[key]) / total;
      }
      //执行动画就是执行setInterval,当达到总次数的时候，终止动画的执行
-     var me = this;
      
      //启动定时器
      //定义动画句柄
@@ -193,14 +194,14 @@ ickt.p = function(key){
          count++;
          //修改样式
          for (var key in obj){
-             dom.style[key] = style[key] + step[key] * count + me.p(key);
+             dom.style[key] = style[key] + step[key] * count + p(key);
          }
          //判断终止条件
          if(count >= total){
              //修正样式
              for (var key in obj){
                  // 判断属性值是否是字符串,是字符串直接复制，不是则加上单位
-                 dom.style[key] = typeof obj[key] === 'string' ? obj[key] : obj[key] + me.p(key);
+                 dom.style[key] = typeof obj[key] === 'string' ? obj[key] : obj[key] + p(key);
              }
              clearInterval(timebar);
              // 传递了callback要执行callback
@@ -217,7 +218,7 @@ ickt.p = function(key){
   *      *@type   事件类型
   *      *@fn     事件回调函数
   *     **/
-ickt.bindEvent  = function(dom, type, fn){
+    function bindEvent(dom, type, fn){
          // 能力检测,判断方法是否存在，存在的话使用，不存在就不使用
         if(dom.addEventListener){
              // dom2级绑定方式,都在冒泡阶段触发
@@ -243,6 +244,8 @@ ickt.bindEvent  = function(dom, type, fn){
     }
 }
 
+
+
  //移除事件
  /** DOM进阶-事件流程，移除事件兼容所有浏览器
  * 实现removeEvent,不同浏览器下，不同的事件级别下 移除事件都一致了。
@@ -250,7 +253,7 @@ ickt.bindEvent  = function(dom, type, fn){
  *@type   事件类型
  *@fn     事件回调函数
 **/
-ickt.removeEvent = function(dom, type, fn){
+function removeEvent(dom, type, fn){
          // 能力检测
     if(dom.removeEventListener){
              //针对DOM2
@@ -263,9 +266,6 @@ ickt.removeEvent = function(dom, type, fn){
          dom['on' + type] = null;
     }
 }
-return ickt;
-})();
-
 
 
 
