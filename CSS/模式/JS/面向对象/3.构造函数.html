@@ -59,6 +59,27 @@
 //     //返回对象，实例对象会被替代
 //     //例如： return {'color':red}, return [1,2,3],  return function demo(){}。在var p = new Person（...）时，p仍旧是会受其他的影响。但可以返回this。
 // } 
+
+
+
+/***
+*综合考虑在定义类时最好使用下面这种方式使用构造函数来定义一个类。
+**/
+//安全类，在定义的构造函数内部判断this是否是该类的实例，是的话，直接实例，不是的话重新实例并返回
+//  Array内部也是类似实现的。
+function People(name,age){
+        //赋值在这里                                                                         
+        this.name = name;
+        this.age = age;
+}
+//定义一些方法在这里
+People.prototype.getName = function(){
+    console.log(this.name)
+}
+
+//创建对象
+var p1 = new People('张三',20);
+
     </script>
 </body>
 </html>

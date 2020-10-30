@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寄生组合式继承</title>
+</head>
+<body>
+    <script>
+
+/***
+*在JS中，通常构造函数的属性存在构造函数中（this....），构造函数的方法存在构造函数的原型对象中(.prototype)
+*/
+
+/***继承：指的是子类继承父类的属性和方法
+继承的方式：
+1.构造函数式继承。
+2.类型继承。
+3.组合式继承。
+4.寄生式继承。
+5.寄生式组合继承（在ES6之前最好用，最常用的做继承方式）。
+这里只讲其中寄生式组合式继承，因为这种继承方式是最好的，其他的请看面向对象Markdown文档笔记。
+    */
+    function inherit(child, parent){
+        //定义继承类
+        function F(){
+            //修改构造函数
+            this.constructor = child;
+        }
+        //让寄生类的原型等于父类的原型
+        F.prototype = parent.prototype;
+        //用寄生类的实例给子类原型赋值
+        child.prototype = new F();
+        return child;        
+    }
+    //或写成
+    function inherit(child, parent){
+        //定义继承类
+        function F(){}
+        //让寄生类的原型等于父类的原型
+        F.prototype = parent.prototype;
+        //用寄生类的实例给子类原型赋值
+        child.prototype = new F();
+        //修改构造函数
+        child.prototype.constructor = child; 
+        return child;
+    }
+
+    //父类
+    function People(name, age, sex){
+        //存储属性
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+    }
+    People.prototype.getName = function(){
+        console.log('我是：' + this.name);
+    } 
+    People.prototype.getAge = function(){
+        console.log('年龄：' + this.age);
+    } 
+    People.prototype.getSex = function(){
+        console.log('性别：' + this.sex + '人');
+    } 
+
+    //子类
+    function Student(name, age, sex, grade){
+        //构造函数式继承，复用父类中，存储属性的逻辑。
+        People.call(this, name, age, sex);
+        //存储属性
+        this.grade = grade;
+        //我们可以在继承后，重写属性（如果在继承前，重写属性，可能会被覆盖）
+        this.name = '构造函数式继承' + name;
+    }
+
+    //寄生式继承
+    inherit(Student, People);
+
+    //由于有F对象在Student构造函数与People构造函数中间，因此因此重写Student.prototype.getSex不会污染People.prototype.getSex
+    Student.prototype.getSex = function(){
+        console.log('性别：' + this.sex + '孩子');
+    }
+    var peop =  new People('小明', 7, '男');
+    var stud =  new Student('小明', 7, '男','100');
+    peop.getSex()//输出是：'性别：男人'
+    stud.getSex()//输出是：'性别：男孩子'
+
+    </script>
+</body>
+</html>
