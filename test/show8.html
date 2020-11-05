@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Bai's web system</title>
+        <style type="text/css">
+            .pagination ul {
+                list-style: none;
+                display: flex
+            }
+
+            .pagination ul li {
+                margin-left: 10px;
+            }
+
+            .box1 {
+                width: 100%;
+                margin-top: 20px;
+                padding-left: 10px;
+                background-color: #95a5a6;
+                height: 40px;
+                line-height: 40px;
+            }
+
+            .box2 {
+                width: 100%;               
+                height: 1000px;
+                /*overflow-x: auto;*/
+                overflow-x: scroll;
+                overflow-y: scroll;
+            }
+
+            .box3 {
+                width: 100%;
+                margin-top: 20px;
+                padding-left: 10px;
+                background-color: #2980b9;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+            }
+
+            table {
+                display: block;
+                width: 100%;
+                margin: 0 auto;
+                border-collapse: collapse;
+                background-color: #ffffff;
+                text-align: center;
+                /*margin-left: 50px;*/
+                /*overflow-x: scroll;*/
+            }
+
+            a {
+                display: inline-block;
+                float: left;
+                padding: 0 20px;
+                text-decoration: none;
+                color: white;
+            }
+
+            a:hover {
+                background-color: #ecf0f1;
+                color: #2c3e50;
+            }
+
+            td {
+                width: 100px;
+                height: 100px;
+                padding: 10px 30px;
+                border: 1px solid #dfe4ea;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div class="box1">
+                <a href="/home">Home</a>
+                <a href="/add">Add</a>
+                <a href="/upload">Upload</a>
+                <a href="/udelete">Delete</a>
+                <a href="/show">All</a>
+                <a href="/query">Query</a>
+                <a href="/update">Update</a>
+                <a href="/earthquake-show">Earthquake</a>
+            </div>
+            <div class="box2">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>time</th>
+                            <th>latitude</th>
+                            <th>longitude</th>
+                            <th>depth</th>
+                            <th>mag</th>
+                            <th>magType</th>
+                            <th>nst</th>
+                            <th>gap</th>
+                            <th>dmin</th>
+                            <th>rms</th>
+                            <th>net</th>
+                            <th>id</th>
+                            <th>updated</th>
+                            <th>place</th>
+                            <th>type</th>
+                            <th>horizontalError</th>
+                            <th>depthError</th>
+                            <th>magError</th>
+                            <th>magNst</th>
+                            <th>status</th>
+                            <th>locationSource</th>
+                            <th>magSource</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2020-11-04T01:45:50.420Z</td>
+                            <td>19.1905002593994</td>
+                            <td>-155.385498046875</td>
+                            <td>33.1300010681152</td>
+                            <td>1.97000003</td>
+                            <td>md</td>
+                            <td>32</td>
+                            <td>246</td>
+                            <td></td>
+                            <td>0.209999993</td>
+                            <td>hv</td>
+                            <td>hv72216642</td>
+                            <td>2020-11-04T01:48:56.230Z</td>
+                            <td>&#34;9 km E of Pāhala</td>
+                            <td>Hawaii &#34;</td>
+                            <td>earthquake</td>
+                            <td>1.46</td>
+                            <td>1.45000005</td>
+                            <td>0.779999971</td>
+                            <td>15</td>
+                            <td>automatic</td>
+                            <td>hv</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T01:42:19.910Z</td>
+                            <td>38.141</td>
+                            <td>-118.006</td>
+                            <td>9.1</td>
+                            <td>1.5</td>
+                            <td>ml</td>
+                            <td>22</td>
+                            <td>78.11</td>
+                            <td>0.04</td>
+                            <td>0.12</td>
+                            <td>nn</td>
+                            <td>nn00781729</td>
+                            <td>2020-11-04T01:48:37.977Z</td>
+                            <td>&#34;29 km SSE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.9</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T01:35:33.057Z</td>
+                            <td>-55.884</td>
+                            <td>-27.0226</td>
+                            <td>39.38</td>
+                            <td>5.2</td>
+                            <td>mb</td>
+                            <td></td>
+                            <td>70</td>
+                            <td>5.668</td>
+                            <td>1.25</td>
+                            <td>us</td>
+                            <td>us7000ca2t</td>
+                            <td>2020-11-04T01:51:32.040Z</td>
+                            <td>&#34;South Sandwich Islands region &#34;</td>
+                            <td>earthquake</td>
+                            <td>5.4</td>
+                            <td>8.2</td>
+                            <td>0.072</td>
+                            <td>64</td>
+                            <td>reviewed</td>
+                            <td>us</td>
+                            <td>us</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T01:32:43.060Z</td>
+                            <td>37.6626663</td>
+                            <td>-118.8596649</td>
+                            <td>1.28</td>
+                            <td>1.24</td>
+                            <td>md</td>
+                            <td>12</td>
+                            <td>151</td>
+                            <td>0.03106</td>
+                            <td>0.03</td>
+                            <td>nc</td>
+                            <td>nc73477666</td>
+                            <td>2020-11-04T01:34:20.128Z</td>
+                            <td>&#34;11km ENE of Mammoth Lakes</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.45</td>
+                            <td>1.08</td>
+                            <td>0.19</td>
+                            <td>11</td>
+                            <td>automatic</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T01:17:39.308Z</td>
+                            <td>28.4424</td>
+                            <td>-100.3256</td>
+                            <td>5</td>
+                            <td>3</td>
+                            <td>mb_lg</td>
+                            <td></td>
+                            <td>190</td>
+                            <td>0.829</td>
+                            <td>0.51</td>
+                            <td>us</td>
+                            <td>us7000ca2p</td>
+                            <td>2020-11-04T01:27:35.040Z</td>
+                            <td>&#34;7 km S of El Indio</td>
+                            <td>Texas &#34;</td>
+                            <td>earthquake</td>
+                            <td>3.6</td>
+                            <td>2</td>
+                            <td>0.109</td>
+                            <td>22</td>
+                            <td>reviewed</td>
+                            <td>us</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T01:10:01.649Z</td>
+                            <td>63.4881</td>
+                            <td>-151.5049</td>
+                            <td>4.4</td>
+                            <td>2</td>
+                            <td>ml</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1.14</td>
+                            <td>ak</td>
+                            <td>ak020e71ptic</td>
+                            <td>2020-11-04T01:18:45.347Z</td>
+                            <td>&#34;12 km ESE of Denali National Park</td>
+                            <td>Alaska &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.2</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>ak</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:59:16.100Z</td>
+                            <td>38.1385</td>
+                            <td>-117.8815</td>
+                            <td>9.4</td>
+                            <td>1.1</td>
+                            <td>ml</td>
+                            <td>14</td>
+                            <td>92.59</td>
+                            <td>0.013</td>
+                            <td>0.08</td>
+                            <td>nn</td>
+                            <td>nn00781725</td>
+                            <td>2020-11-04T01:14:56.678Z</td>
+                            <td>&#34;34 km SE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.8</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:46:45.970Z</td>
+                            <td>38.1405</td>
+                            <td>-117.9897</td>
+                            <td>10.2</td>
+                            <td>1</td>
+                            <td>ml</td>
+                            <td>14</td>
+                            <td>123.19</td>
+                            <td>0.013</td>
+                            <td>0.04</td>
+                            <td>nn</td>
+                            <td>nn00781719</td>
+                            <td>2020-11-04T00:59:56.764Z</td>
+                            <td>&#34;29 km SSE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.6</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:41:33.760Z</td>
+                            <td>32.7636667</td>
+                            <td>-116.0478333</td>
+                            <td>8.91</td>
+                            <td>0.99</td>
+                            <td>ml</td>
+                            <td>19</td>
+                            <td>49</td>
+                            <td>0.02891</td>
+                            <td>0.26</td>
+                            <td>ci</td>
+                            <td>ci39455895</td>
+                            <td>2020-11-04T00:45:14.965Z</td>
+                            <td>&#34;6km WNW of Ocotillo</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.5</td>
+                            <td>0.89</td>
+                            <td>0.301</td>
+                            <td>12</td>
+                            <td>automatic</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:34:23.730Z</td>
+                            <td>19.4386672973633</td>
+                            <td>-155.292327880859</td>
+                            <td>0.449999988079071</td>
+                            <td>1.90999997</td>
+                            <td>md</td>
+                            <td>11</td>
+                            <td>116</td>
+                            <td></td>
+                            <td>0.170000002</td>
+                            <td>hv</td>
+                            <td>hv72216477</td>
+                            <td>2020-11-04T00:37:11.320Z</td>
+                            <td>&#34;6 km W of Volcano</td>
+                            <td>Hawaii &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.32</td>
+                            <td>0.560000002</td>
+                            <td>1.88</td>
+                            <td>6</td>
+                            <td>automatic</td>
+                            <td>hv</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:30:27.751Z</td>
+                            <td>58.7942</td>
+                            <td>-152.7921</td>
+                            <td>17.5</td>
+                            <td>2.4</td>
+                            <td>ml</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1.04</td>
+                            <td>ak</td>
+                            <td>ak020e718q6x</td>
+                            <td>2020-11-04T00:54:44.040Z</td>
+                            <td>&#34;80 km SW of Nanwalek</td>
+                            <td>Alaska &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.4</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>ak</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:25:35.690Z</td>
+                            <td>37.6286667</td>
+                            <td>-119.399</td>
+                            <td>5.69</td>
+                            <td>1.23</td>
+                            <td>md</td>
+                            <td>13</td>
+                            <td>139</td>
+                            <td>0.2538</td>
+                            <td>0.29</td>
+                            <td>nc</td>
+                            <td>nc73477641</td>
+                            <td>2020-11-04T01:34:57.637Z</td>
+                            <td>&#34;20km SE of Yosemite Valley</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.68</td>
+                            <td>13.03</td>
+                            <td>0.16</td>
+                            <td>9</td>
+                            <td>reviewed</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:20:24.740Z</td>
+                            <td>37.641</td>
+                            <td>-119.3951667</td>
+                            <td>6.93</td>
+                            <td>3.6</td>
+                            <td>ml</td>
+                            <td>52</td>
+                            <td>61</td>
+                            <td>0.2509</td>
+                            <td>0.2</td>
+                            <td>nc</td>
+                            <td>nc73477631</td>
+                            <td>2020-11-04T01:49:53.994Z</td>
+                            <td>&#34;20km SE of Yosemite Valley</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.38</td>
+                            <td>2.1</td>
+                            <td>0.28</td>
+                            <td>27</td>
+                            <td>reviewed</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-04T00:19:27.210Z</td>
+                            <td>38.7986679</td>
+                            <td>-122.7409973</td>
+                            <td>13.3</td>
+                            <td>0.63</td>
+                            <td>md</td>
+                            <td>7</td>
+                            <td>199</td>
+                            <td>0.01577</td>
+                            <td>0.08</td>
+                            <td>nc</td>
+                            <td>nc73477626</td>
+                            <td>2020-11-04T01:24:05.188Z</td>
+                            <td>&#34;3km NNE of The Geysers</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>2.78</td>
+                            <td>8.6</td>
+                            <td></td>
+                            <td>1</td>
+                            <td>automatic</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:52:56.090Z</td>
+                            <td>32.8675</td>
+                            <td>-116.2206667</td>
+                            <td>9.45</td>
+                            <td>0.69</td>
+                            <td>ml</td>
+                            <td>19</td>
+                            <td>88</td>
+                            <td>0.1113</td>
+                            <td>0.16</td>
+                            <td>ci</td>
+                            <td>ci39455855</td>
+                            <td>2020-11-04T01:24:02.865Z</td>
+                            <td>&#34;26km NW of Ocotillo</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.31</td>
+                            <td>0.87</td>
+                            <td>0.17</td>
+                            <td>9</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:42:59.280Z</td>
+                            <td>19.1870002746582</td>
+                            <td>-155.449661254883</td>
+                            <td>35.2799987792969</td>
+                            <td>2.16000009</td>
+                            <td>md</td>
+                            <td>41</td>
+                            <td>142</td>
+                            <td></td>
+                            <td>0.119999997</td>
+                            <td>hv</td>
+                            <td>hv72216442</td>
+                            <td>2020-11-03T23:46:11.600Z</td>
+                            <td>&#34;3 km ESE of Pāhala</td>
+                            <td>Hawaii &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.55</td>
+                            <td>0.910000026</td>
+                            <td>0.119999997</td>
+                            <td>13</td>
+                            <td>automatic</td>
+                            <td>hv</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:38:48.720Z</td>
+                            <td>35.7301667</td>
+                            <td>-117.5211667</td>
+                            <td>6.75</td>
+                            <td>0.84</td>
+                            <td>ml</td>
+                            <td>22</td>
+                            <td>81</td>
+                            <td>0.1056</td>
+                            <td>0.11</td>
+                            <td>ci</td>
+                            <td>ci39455847</td>
+                            <td>2020-11-04T01:19:59.204Z</td>
+                            <td>&#34;11km WSW of Searles Valley</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.2</td>
+                            <td>0.61</td>
+                            <td>0.154</td>
+                            <td>10</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:23:11.146Z</td>
+                            <td>36.49876022</td>
+                            <td>-98.73256683</td>
+                            <td>7.718784809</td>
+                            <td>1.64</td>
+                            <td>ml</td>
+                            <td>11</td>
+                            <td>95.3890152</td>
+                            <td>0.01345226448</td>
+                            <td>0.3549734809</td>
+                            <td>ok</td>
+                            <td>ok2020vqrs</td>
+                            <td>2020-11-03T23:26:09.807Z</td>
+                            <td>&#34;16 km SE of Waynoka</td>
+                            <td>Oklahoma &#34;</td>
+                            <td>earthquake</td>
+                            <td>3.828055586</td>
+                            <td>5.647225333</td>
+                            <td></td>
+                            <td>9</td>
+                            <td>automatic</td>
+                            <td>ok</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:22:17.310Z</td>
+                            <td>38.8129997</td>
+                            <td>-122.8213348</td>
+                            <td>2.65</td>
+                            <td>1.06</td>
+                            <td>md</td>
+                            <td>27</td>
+                            <td>52</td>
+                            <td>0.007387</td>
+                            <td>0.02</td>
+                            <td>nc</td>
+                            <td>nc73477606</td>
+                            <td>2020-11-03T23:46:06.500Z</td>
+                            <td>&#34;7km NW of The Geysers</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.22</td>
+                            <td>0.39</td>
+                            <td>0.16</td>
+                            <td>5</td>
+                            <td>automatic</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:18:50.276Z</td>
+                            <td>44.3633</td>
+                            <td>-115.1455</td>
+                            <td>12.13</td>
+                            <td>3.2</td>
+                            <td>ml</td>
+                            <td></td>
+                            <td>61</td>
+                            <td>0.946</td>
+                            <td>0.79</td>
+                            <td>us</td>
+                            <td>us7000ca26</td>
+                            <td>2020-11-03T23:32:44.040Z</td>
+                            <td>&#34;23 km NW of Stanley</td>
+                            <td>Idaho &#34;</td>
+                            <td>earthquake</td>
+                            <td>2.2</td>
+                            <td>10.3</td>
+                            <td>0.038</td>
+                            <td>92</td>
+                            <td>reviewed</td>
+                            <td>us</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:08:13.400Z</td>
+                            <td>38.7147</td>
+                            <td>-117.121</td>
+                            <td>15.5</td>
+                            <td>1.6</td>
+                            <td>ml</td>
+                            <td>10</td>
+                            <td>206.6</td>
+                            <td>0.715</td>
+                            <td>0.15</td>
+                            <td>nn</td>
+                            <td>nn00781707</td>
+                            <td>2020-11-04T00:21:59.592Z</td>
+                            <td>&#34;55 km S of Kingston</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>2</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:07:54.971Z</td>
+                            <td>-23.908</td>
+                            <td>-179.911</td>
+                            <td>501.92</td>
+                            <td>4.5</td>
+                            <td>mb</td>
+                            <td></td>
+                            <td>73</td>
+                            <td>5.603</td>
+                            <td>1.08</td>
+                            <td>us</td>
+                            <td>us7000ca21</td>
+                            <td>2020-11-03T23:26:47.040Z</td>
+                            <td>&#34;south of the Fiji Islands &#34;</td>
+                            <td>earthquake</td>
+                            <td>12.4</td>
+                            <td>9.3</td>
+                            <td>0.048</td>
+                            <td>128</td>
+                            <td>reviewed</td>
+                            <td>us</td>
+                            <td>us</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T23:01:13.640Z</td>
+                            <td>39.0407</td>
+                            <td>-118.4163</td>
+                            <td>1.3</td>
+                            <td>1.6</td>
+                            <td>ml</td>
+                            <td>11</td>
+                            <td>128.29</td>
+                            <td>0.356</td>
+                            <td>0.31</td>
+                            <td>nn</td>
+                            <td>nn00781705</td>
+                            <td>2020-11-03T23:09:38.640Z</td>
+                            <td>&#34;35 km ENE of Schurz</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>25.7</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:43:13.082Z</td>
+                            <td>61.9958</td>
+                            <td>-150.6095</td>
+                            <td>19.1</td>
+                            <td>1.2</td>
+                            <td>ml</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>0.56</td>
+                            <td>ak</td>
+                            <td>ak020e5qvo7g</td>
+                            <td>2020-11-03T22:46:27.707Z</td>
+                            <td>&#34;40 km SSW of Trapper Creek</td>
+                            <td>Alaska &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.3</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>ak</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:42:29.880Z</td>
+                            <td>34.0578333</td>
+                            <td>-116.7303333</td>
+                            <td>16.08</td>
+                            <td>0.89</td>
+                            <td>ml</td>
+                            <td>25</td>
+                            <td>140</td>
+                            <td>0.06817</td>
+                            <td>0.17</td>
+                            <td>ci</td>
+                            <td>ci39455783</td>
+                            <td>2020-11-03T22:57:17.627Z</td>
+                            <td>&#34;14km W of Morongo Valley</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.4</td>
+                            <td>0.72</td>
+                            <td>0.113</td>
+                            <td>22</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:39:36.690Z</td>
+                            <td>33.826</td>
+                            <td>-117.4803333</td>
+                            <td>-0.66</td>
+                            <td>1.02</td>
+                            <td>ml</td>
+                            <td>29</td>
+                            <td>73</td>
+                            <td>0.03063</td>
+                            <td>0.24</td>
+                            <td>ci</td>
+                            <td>ci39455767</td>
+                            <td>2020-11-04T01:14:08.359Z</td>
+                            <td>&#34;7km SSE of Home Gardens</td>
+                            <td>CA &#34;</td>
+                            <td>quarry blast</td>
+                            <td>0.46</td>
+                            <td>31.61</td>
+                            <td>0.082</td>
+                            <td>11</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:38:03.620Z</td>
+                            <td>38.2323</td>
+                            <td>-117.745</td>
+                            <td>6.1</td>
+                            <td>0.7</td>
+                            <td>ml</td>
+                            <td>8</td>
+                            <td>188.7</td>
+                            <td>0.131</td>
+                            <td>0.04</td>
+                            <td>nn</td>
+                            <td>nn00781703</td>
+                            <td>2020-11-03T22:51:36.701Z</td>
+                            <td>&#34;36 km ESE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>8.9</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:33:37.670Z</td>
+                            <td>34.3218333</td>
+                            <td>-119.1288333</td>
+                            <td>17.83</td>
+                            <td>1.45</td>
+                            <td>ml</td>
+                            <td>10</td>
+                            <td>97</td>
+                            <td>0.05149</td>
+                            <td>0.26</td>
+                            <td>ci</td>
+                            <td>ci39455751</td>
+                            <td>2020-11-04T01:10:41.148Z</td>
+                            <td>&#34;7km WSW of Santa Paula</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.99</td>
+                            <td>1</td>
+                            <td>0.113</td>
+                            <td>8</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:30:29.070Z</td>
+                            <td>35.8335</td>
+                            <td>-117.654</td>
+                            <td>10.64</td>
+                            <td>0.75</td>
+                            <td>ml</td>
+                            <td>16</td>
+                            <td>81</td>
+                            <td>0.04921</td>
+                            <td>0.07</td>
+                            <td>ci</td>
+                            <td>ci39455735</td>
+                            <td>2020-11-04T01:02:59.095Z</td>
+                            <td>&#34;24km N of Ridgecrest</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.16</td>
+                            <td>0.31</td>
+                            <td>0.094</td>
+                            <td>8</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:30:06.190Z</td>
+                            <td>35.9391667</td>
+                            <td>-117.6713333</td>
+                            <td>5.86</td>
+                            <td>0.26</td>
+                            <td>ml</td>
+                            <td>9</td>
+                            <td>121</td>
+                            <td>0.01911</td>
+                            <td>0.07</td>
+                            <td>ci</td>
+                            <td>ci37304636</td>
+                            <td>2020-11-04T01:06:41.664Z</td>
+                            <td>&#34;21km E of Little Lake</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.23</td>
+                            <td>0.41</td>
+                            <td>0.08</td>
+                            <td>3</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:29:46.580Z</td>
+                            <td>35.9451667</td>
+                            <td>-117.6691667</td>
+                            <td>6.94</td>
+                            <td>0.45</td>
+                            <td>ml</td>
+                            <td>7</td>
+                            <td>134</td>
+                            <td>0.01549</td>
+                            <td>0.17</td>
+                            <td>ci</td>
+                            <td>ci39455743</td>
+                            <td>2020-11-04T00:56:05.429Z</td>
+                            <td>&#34;21km E of Little Lake</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.6</td>
+                            <td>31.61</td>
+                            <td>0.147</td>
+                            <td>5</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:28:55.730Z</td>
+                            <td>38.17</td>
+                            <td>-117.8252</td>
+                            <td>8.5</td>
+                            <td>1.8</td>
+                            <td>ml</td>
+                            <td>28</td>
+                            <td>64.22</td>
+                            <td>0.035</td>
+                            <td>0.08</td>
+                            <td>nn</td>
+                            <td>nn00781699</td>
+                            <td>2020-11-03T22:39:46.852Z</td>
+                            <td>&#34;Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.7</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:27:53.390Z</td>
+                            <td>37.6613333</td>
+                            <td>-118.8623333</td>
+                            <td>0.24</td>
+                            <td>0.81</td>
+                            <td>md</td>
+                            <td>17</td>
+                            <td>98</td>
+                            <td>0.03139</td>
+                            <td>0.06</td>
+                            <td>nc</td>
+                            <td>nc73477586</td>
+                            <td>2020-11-04T00:07:04.646Z</td>
+                            <td>&#34;11km ENE of Mammoth Lakes</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.27</td>
+                            <td>0.51</td>
+                            <td>0.227</td>
+                            <td>12</td>
+                            <td>reviewed</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:21:36.770Z</td>
+                            <td>41.6098333333333</td>
+                            <td>-124.960333333333</td>
+                            <td>26.29</td>
+                            <td>1.53</td>
+                            <td>md</td>
+                            <td>9</td>
+                            <td>303</td>
+                            <td>0.7944</td>
+                            <td>1.3</td>
+                            <td>uw</td>
+                            <td>uw61689037</td>
+                            <td>2020-11-03T23:55:20.740Z</td>
+                            <td>&#34;near the coast of Northern California &#34;</td>
+                            <td>earthquake</td>
+                            <td>22.78</td>
+                            <td>12.2</td>
+                            <td>0.0835509366462523</td>
+                            <td>2</td>
+                            <td>reviewed</td>
+                            <td>uw</td>
+                            <td>uw</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:19:51.680Z</td>
+                            <td>38.1638</td>
+                            <td>-117.9837</td>
+                            <td>3.7</td>
+                            <td>0.7</td>
+                            <td>ml</td>
+                            <td>10</td>
+                            <td>94.82</td>
+                            <td>0.028</td>
+                            <td>0.02</td>
+                            <td>nn</td>
+                            <td>nn00781697</td>
+                            <td>2020-11-03T22:29:59.351Z</td>
+                            <td>&#34;27 km SSE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>1.2</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:17:59.320Z</td>
+                            <td>32.829</td>
+                            <td>-115.9435</td>
+                            <td>8.14</td>
+                            <td>1.22</td>
+                            <td>ml</td>
+                            <td>34</td>
+                            <td>58</td>
+                            <td>0.06158</td>
+                            <td>0.17</td>
+                            <td>ci</td>
+                            <td>ci39455711</td>
+                            <td>2020-11-04T00:40:11.832Z</td>
+                            <td>&#34;11km NNE of Ocotillo</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.19</td>
+                            <td>0.57</td>
+                            <td>0.094</td>
+                            <td>13</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:14:34.220Z</td>
+                            <td>34.052</td>
+                            <td>-116.7205</td>
+                            <td>16.19</td>
+                            <td>1.05</td>
+                            <td>ml</td>
+                            <td>15</td>
+                            <td>162</td>
+                            <td>0.06172</td>
+                            <td>0.09</td>
+                            <td>ci</td>
+                            <td>ci37304620</td>
+                            <td>2020-11-03T23:23:43.776Z</td>
+                            <td>&#34;13km W of Morongo Valley</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.25</td>
+                            <td>0.52</td>
+                            <td>0.086</td>
+                            <td>26</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:14:26.940Z</td>
+                            <td>34.0455</td>
+                            <td>-116.7226667</td>
+                            <td>14.44</td>
+                            <td>1.07</td>
+                            <td>ml</td>
+                            <td>25</td>
+                            <td>121</td>
+                            <td>0.06243</td>
+                            <td>0.09</td>
+                            <td>ci</td>
+                            <td>ci39455695</td>
+                            <td>2020-11-04T00:33:07.539Z</td>
+                            <td>&#34;13km W of Morongo Valley</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.18</td>
+                            <td>0.34</td>
+                            <td>0.136</td>
+                            <td>26</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:12:12.710Z</td>
+                            <td>37.6615</td>
+                            <td>-118.8593333</td>
+                            <td>2.18</td>
+                            <td>1.74</td>
+                            <td>md</td>
+                            <td>22</td>
+                            <td>98</td>
+                            <td>0.02998</td>
+                            <td>0.04</td>
+                            <td>nc</td>
+                            <td>nc73477581</td>
+                            <td>2020-11-04T00:59:06.013Z</td>
+                            <td>&#34;11km ENE of Mammoth Lakes</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.29</td>
+                            <td>0.38</td>
+                            <td>0.308</td>
+                            <td>21</td>
+                            <td>reviewed</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:11:41.715Z</td>
+                            <td>65.6668</td>
+                            <td>-145.2853</td>
+                            <td>10.7</td>
+                            <td>2.2</td>
+                            <td>ml</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1.08</td>
+                            <td>ak</td>
+                            <td>ak020e5qovif</td>
+                            <td>2020-11-03T22:20:14.724Z</td>
+                            <td>&#34;24 km WNW of Central</td>
+                            <td>Alaska &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.2</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>ak</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T22:11:14.440Z</td>
+                            <td>38.2135</td>
+                            <td>-117.7085</td>
+                            <td>6.6</td>
+                            <td>0.9</td>
+                            <td>ml</td>
+                            <td>11</td>
+                            <td>184.25</td>
+                            <td>0.03</td>
+                            <td>0.14</td>
+                            <td>nn</td>
+                            <td>nn00781693</td>
+                            <td>2020-11-03T22:14:58.280Z</td>
+                            <td>&#34;40 km ESE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>3.8</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T21:55:11.840Z</td>
+                            <td>32.5966667</td>
+                            <td>-117.0008333</td>
+                            <td>-0.34</td>
+                            <td>1.42</td>
+                            <td>ml</td>
+                            <td>24</td>
+                            <td>206</td>
+                            <td>0.06064</td>
+                            <td>0.25</td>
+                            <td>ci</td>
+                            <td>ci39455679</td>
+                            <td>2020-11-03T23:10:03.663Z</td>
+                            <td>&#34;6km SE of Chula Vista</td>
+                            <td>CA &#34;</td>
+                            <td>quarry blast</td>
+                            <td>1.29</td>
+                            <td>31.61</td>
+                            <td>0.14</td>
+                            <td>6</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T21:32:48.350Z</td>
+                            <td>38.1812</td>
+                            <td>-117.8008</td>
+                            <td>7.1</td>
+                            <td>1.2</td>
+                            <td>ml</td>
+                            <td>15</td>
+                            <td>84.1</td>
+                            <td>0.031</td>
+                            <td>0.28</td>
+                            <td>nn</td>
+                            <td>nn00781687</td>
+                            <td>2020-11-03T21:39:01.255Z</td>
+                            <td>&#34;35 km SE of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>2.2</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T21:30:02.910Z</td>
+                            <td>39.0856667</td>
+                            <td>-123.7356667</td>
+                            <td>8.02</td>
+                            <td>1.14</td>
+                            <td>md</td>
+                            <td>8</td>
+                            <td>246</td>
+                            <td>0.03769</td>
+                            <td>0.07</td>
+                            <td>nc</td>
+                            <td>nc73477571</td>
+                            <td>2020-11-04T00:34:06.834Z</td>
+                            <td>&#34;13km SSE of Navarro Head</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.52</td>
+                            <td>0.67</td>
+                            <td>0.351</td>
+                            <td>8</td>
+                            <td>reviewed</td>
+                            <td>nc</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T20:54:57.740Z</td>
+                            <td>38.1075</td>
+                            <td>-118.2227</td>
+                            <td>7</td>
+                            <td>1.4</td>
+                            <td>ml</td>
+                            <td>17</td>
+                            <td>83.47</td>
+                            <td>0.159</td>
+                            <td>0.1</td>
+                            <td>nn</td>
+                            <td>nn00781680</td>
+                            <td>2020-11-03T21:33:39.968Z</td>
+                            <td>&#34;32 km SSW of Mina</td>
+                            <td>Nevada &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>11.7</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T20:54:55.460Z</td>
+                            <td>19.1816673278809</td>
+                            <td>-155.477661132812</td>
+                            <td>33.1100006103516</td>
+                            <td>2.33</td>
+                            <td>ml</td>
+                            <td>43</td>
+                            <td>90</td>
+                            <td></td>
+                            <td>0.109999999</td>
+                            <td>hv</td>
+                            <td>hv72216287</td>
+                            <td>2020-11-03T21:00:25.320Z</td>
+                            <td>&#34;2 km S of Pāhala</td>
+                            <td>Hawaii &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.67</td>
+                            <td>0.860000014</td>
+                            <td>4.51</td>
+                            <td>4</td>
+                            <td>automatic</td>
+                            <td>hv</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T20:51:53.050Z</td>
+                            <td>38.0691</td>
+                            <td>-118.2655</td>
+                            <td>6.9</td>
+                            <td>2.1</td>
+                            <td>ml</td>
+                            <td>29</td>
+                            <td>76.52</td>
+                            <td>0.191</td>
+                            <td>0.1587</td>
+                            <td>nn</td>
+                            <td>nn00781678</td>
+                            <td>2020-11-03T22:52:21.208Z</td>
+                            <td>&#34;33 km NE of Benton</td>
+                            <td>California &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>4.1</td>
+                            <td>0.37</td>
+                            <td>18</td>
+                            <td>reviewed</td>
+                            <td>nn</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T20:49:51.567Z</td>
+                            <td>62.9597</td>
+                            <td>-148.2855</td>
+                            <td>59.8</td>
+                            <td>1.7</td>
+                            <td>ml</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1.21</td>
+                            <td>ak</td>
+                            <td>ak020e5pq68x</td>
+                            <td>2020-11-03T21:02:14.559Z</td>
+                            <td>&#34;58 km SE of Cantwell</td>
+                            <td>Alaska &#34;</td>
+                            <td>earthquake</td>
+                            <td></td>
+                            <td>0.4</td>
+                            <td></td>
+                            <td></td>
+                            <td>automatic</td>
+                            <td>ak</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T20:42:41.590Z</td>
+                            <td>35.0598333</td>
+                            <td>-118.3341667</td>
+                            <td>-0.99</td>
+                            <td>1.23</td>
+                            <td>ml</td>
+                            <td>25</td>
+                            <td>51</td>
+                            <td>0.06934</td>
+                            <td>0.18</td>
+                            <td>ci</td>
+                            <td>ci39455623</td>
+                            <td>2020-11-03T21:19:05.913Z</td>
+                            <td>&#34;13km SE of Tehachapi</td>
+                            <td>CA &#34;</td>
+                            <td>quarry blast</td>
+                            <td>0.34</td>
+                            <td>31.61</td>
+                            <td>0.134</td>
+                            <td>13</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                        <tr>
+                            <td>2020-11-03T20:38:43.120Z</td>
+                            <td>33.8638333</td>
+                            <td>-116.3171667</td>
+                            <td>3.01</td>
+                            <td>1.05</td>
+                            <td>ml</td>
+                            <td>42</td>
+                            <td>54</td>
+                            <td>0.06241</td>
+                            <td>0.18</td>
+                            <td>ci</td>
+                            <td>ci39455615</td>
+                            <td>2020-11-03T21:36:50.114Z</td>
+                            <td>&#34;8km NE of Thousand Palms</td>
+                            <td>CA &#34;</td>
+                            <td>earthquake</td>
+                            <td>0.18</td>
+                            <td>0.32</td>
+                            <td>0.178</td>
+                            <td>27</td>
+                            <td>reviewed</td>
+                            <td>ci</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>            
+            <div class="box3">
+                <div class="pagination">
+                    <ul>
+                        <li class="previous disabled unavailable">
+                            <a>&laquo;</a>
+                        </li>
+                        <li class="active">
+                            <a>1</a>
+                        </li>
+                        <li>
+                            <a href="/earthquake-show/?page=2">2</a>
+                        </li>
+                        <li>
+                            <a href="/earthquake-show/?page=3">3</a>
+                        </li>
+                        <li>
+                            <a href="/earthquake-show/?page=4">4</a>
+                        </li>
+                        <li>
+                            <a href="/earthquake-show/?page=5">5</a>
+                        </li>
+                        <li class="disabled">
+                            <a>...</a>
+                        </li>
+                        <li>
+                            <a href="/earthquake-show/?page=1235">1235</a>
+                        </li>
+                        <li>
+                            <a href="/earthquake-show/?page=1236">1236</a>
+                        </li>
+                        <li class="next">
+                            <a href="/earthquake-show/?page=2">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>           
+        </div>
+    </body>
+</html>
