@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS实现观察者模式</title>
+</head>
+<body>
+    <script src="../../../../library/jquery-3.5.1.js"></script>
+    <script>
+        // 观察者模式，又叫发布订阅者模式，又叫消息系统，又叫消息机制，又叫自定义事件，解决主体与观察者之间的耦合问题
+        var Observer = (function(){
+            // 消息队列
+            var _msg = {};
+
+            //暴露接口
+            return {
+                /***
+                *订阅消息
+                *@type  消息名称
+                *fn     回调函数
+                *   将消息回调函数，存储在消息队列中
+                **/
+                on:function(type, fn){
+                    //判断这种类型的消息是否存在
+                    if(_msg[type]){
+                        //继续存储
+                        _msg[type].push(fn)
+                    } else {
+                        //初始化一个消息管道
+                        _msg[type] = [fn]
+                    }
+                },
+
+                /***
+                *发布消息
+                *@type      消息类型
+                *从第二个参数开始，表示执行消息回调函数的时候，传递的参数
+                *遍历该类型的消息回调函数，并逐一执行
+                */
+                trigger: function(type){
+                    //该类型的消息是否存在
+                    if(_msg[type]){
+                        //获取传递的参数
+                        var args = Array.prototype.slice.call(arguments, 1);
+                        //遍历消息管道，注意执行每一个方法
+                        for(var i = 0; i<_msg[type].length; i++){
+                            //执行每一个函数，
+                            //args是一个数组，要逐一传递，因此要借助apply。apply与call详见：https://github.com/lin-xin/blog/issues/7
+                            //  apply 方法传入两个参数：一个是作为函数上下文的对象，另外一个是作为函数参数所组成的数组。
+                            _msg[type][i].apply(null, args)
+                        }
+                    }
+                },
+
+                /***
+                *注销消息
+                *@type     消息名称
+                *fn        回调函数     注意：匿名函数无法注销
+                *从消息队列中，移除该回调函数
+                */
+                off: function(type, fn){
+                    //没有传递参数，清空消息队列
+                    //传递了type， 清空该类型的消息管道
+                    //传递了type, fn, 从该类型的消息管道中找到方法fn，并将其清除
+                    if(type === undefined){
+                        _msg = {};
+                        return;
+                    }
+                    //是否有fn
+                    if(fn === undefined){
+                        _msg[type] = [];
+                        return;
+                    }else {
+                        //从后往前找清除，目的是为了应对数组塌陷的影响
+                        for(var i = _msg[type].length;i>=0;i--){
+                            if(_msg[type][i] === fn){
+                                _msg[type].splice(i, 1);
+                                return;
+                            }
+                        }
+                    }
+
+                },
+                
+                /***
+                *单次订阅的
+                *@type   消息名称
+                *fn      回调函数
+                *执行后将其移除
+                */
+                once: function(type, fn){
+                    var me = this;
+                    //包装函数
+                    function callback(){
+                        //注销回调函数，防止无限循环。注意一定要将注销放在最前面，防止fn中有调用trigger函数的语句形成递归调用。
+                        me.off(type, callback)
+                        //执行回调函数，并传递参数
+                        fn.apply(null, arguments);
+                    }
+                    //订阅
+                    this.on(type, callback)
+                }
+            }
+        })()
+
+        //订阅消息
+        function iickt(){
+            console.log(arguments)
+        }
+        Observer.on('ickt', iickt)
+        Observer.on('ickt', function(){
+            console.log('hello ickt')
+        })
+        Observer.on('demo', function(){
+            console.log(arguments)
+        })
+
+        //注销消息
+        //这样是注销不了，ickt的匿名函数的，因为匿名函数写两遍代表的是两个函数
+        // Observer.off('ickt', function(){
+        //     console.log(arguments)
+        // });
+        Observer.off('ickt', iickt);
+
+        //发布消息
+        Observer.trigger('ickt', 100, 200, true, 'hello1')
+        Observer.trigger('demo', 200, 400, false, 'hello2')
+
+        //单次订阅
+        Observer.once('test', function(){
+            console.log('run test 单次订阅', arguments)
+        })
+        Observer.trigger('test', '第一次调用');
+        Observer.trigger('test', '第二次调用')
+    </script>
+</body>
+</html>

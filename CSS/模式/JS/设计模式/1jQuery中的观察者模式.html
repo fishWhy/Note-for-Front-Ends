@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery中的观察者模式</title>
+</head>
+<body>
+    <script src="../../../../library/jquery-3.5.1.js"></script>
+    <script>
+        // 观察者模式，又叫发布订阅者模式，又叫消息系统，又叫消息机制，又叫自定义事件，解决主体与观察者之间的耦合问题
+        // 关于$.Callback()可参考：https://www.cnblogs.com/xiaowin/p/11677576.html
+        //创建一个消息系统(非常像事件)
+        var cb = $.Callbacks();
+        //订阅消息
+        cb.add('ickt', function(){
+            console.log(arguments)
+        })
+        //发布消息
+        cb.fire('ickt', 100, 200, true, 'hello1')
+        cb.fire('ickt', 200, 400, false,'hello2')
+        cb.fire('ickt', 300, 600, true, 'hello3')
+    </script>
+</body>
+</html>

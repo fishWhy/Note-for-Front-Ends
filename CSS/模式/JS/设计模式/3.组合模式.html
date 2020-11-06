@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组合模式</title>
+    <style>
+        a:hover{
+            color: indianred;
+        }
+        a{
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+// 组合模式应用——新闻模块
+// 整个新闻模块是一个根节点
+// 每一行是一个枝干节点
+// 每一行有多条新闻，每一条新闻就是一个叶子节点（因此不包含子节点）
+// 总结：
+// 	是一个结构型设计模式
+//     本质就是一个拆分合并的过程
+//     整体与个体之间具有行为的一致性
+//     对个体的不同的组装，可以是整体差异化
+//     组合模式使整体结构很清晰
+    </script>
+    <script src="../../../../library/ickt.js"></script>
+    <script>
+        //定义基类，让所有类继承
+        function Base(){
+            //当前元素
+            this.element = null;
+            //子元素
+            this.children = [];
+        }
+        //定义这些行文方法
+        Base.prototype.init = function(){
+            //基类不能初始化
+            throw new Error('基类不能初始化')
+        }
+        //获取当前实例对应的元素
+        Base.prototype.getElement = function(){
+            return this.element;
+        }
+        //添加子元素
+        Base.prototype.add = function(child){
+            //存储子对象
+            this.children.push(child);
+            //处理dom
+            this.element.appendChild(child.getElement());
+            //链式调用
+            return this;
+        }
+
+
+        //容器类
+        function Container(id, parent){
+            //构造函数式继承
+            Base.call(this);
+            //存储数据
+            this.id = id;
+            this.parent = parent;
+            //初始化
+            this.init();
+        }
+        //可以使用类式继承，也可以使用寄生式继承
+        ickt.inherit(Container, Base);
+        //重写方法
+        //初始化方法
+        Container.prototype.init = function(){
+            //创建元素
+            this.element = document.createElement('ul');
+            //添加id
+            this.element.id = this.id;
+            //添加类
+            this.element.className = 'container'
+        }
+        // 显示容器
+        Container.prototype.show = function(){
+            //让容器元素上树
+            this.parent.appendChild(this.element);
+        }
+
+
+
+        //每一行的类
+        function Item(className){
+            //构造函数继承
+            Base.call(this);
+            //存储数据
+            this.className = className || 'item';
+            //初始化
+            this.init();
+        }
+        //继承
+        ickt.inherit(Item, Base);
+        //重写方法
+        Item.prototype.init = function(){
+            //创建元素
+            this.element = document.createElement('li');
+            //设置属性
+            this.element.className = this.className; 
+        }
+
+
+
+        //没有分类的新闻
+        function TitleNews(text, href){
+            //构造函数继承
+            Base.call(this);
+            //存储数据
+            this.text = text;
+            this.href = href;
+            //初始化
+            this.init();
+        }
+        //继承
+        ickt.inherit(TitleNews, Base);
+        //重写方法
+        //初始化方法
+        TitleNews.prototype.init = function(){
+            //定义元素
+            this.element = document.createElement('a');
+            //设置属性
+            this.element.href = this.href;
+            //设置内容
+            this.element.innerHTML = this.text;
+        }
+
+        //分类新闻
+        function TypeNews(text, href, type){
+            //构造函数式继承
+            Base.call(this)
+            //存储数据
+            this.text = text;
+            this.href = href;
+            this.type = type;
+            //初始化
+            this.init();
+        }
+        //继承
+        ickt.inherit(TypeNews, Base)
+        //重写方法
+        //初始化方法
+        TypeNews.prototype.init = function(){
+            //创建元素
+            this.element = document.createElement('a');
+            var span = document.createElement('span');
+            var text = document.createTextNode(this.text);
+            //设置内容
+            span.innerHTML = this.type + ' | ';
+            //设置属性
+            this.element.href = this.href;
+            //组装
+            this.element.appendChild(span)
+            this.element.appendChild(text)
+        }
+
+        //使用类
+        new Container('sport', document.body)
+            .add(
+                new Item().add(
+                    new TypeNews('不用烤箱也能做蛋糕！酸奶芝士蛋糕，一学就会！',
+                    'https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9883050473377355611%22%7D&n_type=0&p_from=1',
+                    '美食')
+                )
+            )
+            .add(new Item().add(
+                    new TypeNews('中国成功发射一箭十三星',
+                    'https://www.baidu.com/s?cl=3&tn=baidutop10&fr=top1000&wd=%E4%B8%AD%E5%9B%BD%E6%88%90%E5%8A%9F%E5%8F%91%E5%B0%84%E4%B8%80%E7%AE%AD%E5%8D%81%E4%B8%89%E6%98%9F&rsv_idx=2&rsv_dl=fyb_n_homepage&hisfilter=1',
+                    '军事')
+                )
+            )
+            .add(new Item().add(
+                    new TypeNews('数字人民币都要来了，为啥还发行新版5元纸币？',
+                    'https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9756392321565706446%22%7D&n_type=0&p_from=1',
+                    '财经')
+                )
+            )
+            .add(new Item().add(
+                    new TitleNews('数字人民币都要来了，为啥还发行新版5元纸币？','https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9756392321565706446%22%7D&n_type=0&p_from=1')
+                )
+            )
+            .add(
+                new Item().add(
+                    new TitleNews('不用烤箱也能做蛋糕！酸奶芝士蛋糕，一学就会！','https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9883050473377355611%22%7D&n_type=0&p_from=1')
+                ).add(
+                    new TitleNews('中国成功发射一箭十三星','https://www.baidu.com/s?cl=3&tn=baidutop10&fr=top1000&wd=%E4%B8%AD%E5%9B%BD%E6%88%90%E5%8A%9F%E5%8F%91%E5%B0%84%E4%B8%80%E7%AE%AD%E5%8D%81%E4%B8%89%E6%98%9F&rsv_idx=2&rsv_dl=fyb_n_homepage&hisfilter=1')
+                )
+            )
+            
+        //上树
+        .show()
+
+
+
+    </script>
+</body>
+</html>

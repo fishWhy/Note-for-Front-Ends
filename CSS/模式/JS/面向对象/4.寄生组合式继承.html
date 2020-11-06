@@ -29,22 +29,38 @@
         }
         //让寄生类的原型等于父类的原型
         F.prototype = parent.prototype;
-        //用寄生类的实例给子类原型赋值
+        //用寄生类的实例给子类原型赋值，继承原型数据
         child.prototype = new F();
-        return child;        
-    }
+        //继承静态数据
+        for(let key in parent){
+            //如果是自身的
+            if(parent.hasOwnProperty(key)){
+                //存储数据
+                child[key] = parent[key];
+            }
+        }       
+        return child;  
+}
     //或写成
     function inherit(child, parent){
         //定义继承类
         function F(){}
         //让寄生类的原型等于父类的原型
         F.prototype = parent.prototype;
-        //用寄生类的实例给子类原型赋值
+        //用寄生类的实例给子类原型赋值，继承原型数据
         child.prototype = new F();
         //修改构造函数
         child.prototype.constructor = child; 
+        //继承静态数据
+        for(let key in parent){
+            //如果是自身的
+            if(parent.hasOwnProperty(key)){
+                //存储数据
+                child[key] = parent[key];
+            }
+        }
         return child;
-    }
+}
 
     //父类
     function People(name, age, sex){
