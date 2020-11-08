@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣杯布局</title>
+    <style>
+        body{
+            height: 600px;
+        }
+        .container{
+            height: 80%;
+            margin: 0 auto;
+            border: 3px solid #000;
+            overflow: hidden;
+            /* overflow: scroll; */
+        }
+        .box1{
+            float: top;
+            height: 20%;
+            width: 300px;
+            background-color: red;
+            /* 填充空间 */
+            padding-right: 5800px;
+            /* 通过父margine,让盒子占用的空间减少 */
+            margin-right: -5800px;
+
+        }
+        .box2{
+            float: top;
+            height: 50%;
+            width: 5800px;
+            background-color: green;
+            /* 填充空间 */
+            padding-right: 5800px;
+            /* 通过父margine,让盒子占用的空间减少 */
+            margin-right: -5800px;
+        }
+        .box3{
+            float: top;
+            height: 30%;
+            width: 400px;
+            background-color: blue;
+            /* 填充空间 */
+            padding-right: 5800px;
+            /* 通过父margine,让盒子占用的空间减少 */
+            margin-right: -5800px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+</body>
+</html>
+
+
+

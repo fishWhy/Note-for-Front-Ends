@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .d1{
+            width: 100%; background-color: red; height: 100px;
+        }
+        .d2{
+            width: 6000px; background-color: green; height: 100px;
+            overflow: scroll; 
+        }
+    </style>
+</head>
+<body>
+    <div>      
+       <div class="d1"></div>
+       <div class="d2"></div>
+    </div>
+    <script>
+        function getStyle(obj,attr){
+             if(obj.currentStyle){//兼容IE
+                 return obj.currentStyle[attr];
+            }else{
+                 return getComputedStyle(obj,false)[attr];
+            }
+        }
+        var d1 = document.getElementsByClassName('d1')[0]
+        var d2 = document.getElementsByClassName('d2')[0]
+        w2 = getStyle(d2, 'width')
+        console.log(w2)
+        d1.style['width'] = w2;
+
+    </script>
+</body>
+</html>
