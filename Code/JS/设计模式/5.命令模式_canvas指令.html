@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命令模式——canvas指令</title>
+</head>
+<body style="text-align: center;">
+    <canvas width="1000" height="1000"></canvas>
+    <script>
+        //封装一个指令对象
+        var Command = (function(){
+            //获取canvas
+            var canvas = document.getElementsByTagName('canvas')[0];
+            //绘制圆
+            var ctx = canvas.getContext('2d');
+            //封装指令
+            var _C = {
+                //描边圆
+                strokeCircle: function(x, y, r, color){
+                    ctx.beginPath();
+                    ctx.arc(x, y, r, 0, 2*Math.PI);
+                    ctx.closePath();
+                    //设置颜色并描边
+                    ctx.strokeStyle = color;
+                    ctx.stroke();
+                },
+                //填充元素
+                fillCircle: function(x, y, r, color){
+                    ctx.beginPath();
+                    ctx.arc(x, y, r, 0, 2*Math.PI);
+                    ctx.closePath();
+                    //设置颜色并描边
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                },
+                //绘制矩形
+                fillCenterRect: function(x, y, width, height, color){
+                    //传递了颜色，设置颜色
+                    if(color) {
+                        ctx.fillStyle = color;
+                    }
+                    //绘制
+                    ctx.fillRect(x-width/2, y-height/2, width, height)
+                },
+                //清空
+                clearRect: function(){
+                    ctx.clearRect.apply(ctx, arguments)
+                },
+                clearCenterRect: function(x, y, width, height){
+                    ctx.clearRect(x-width/2, y-height/2, width, height)
+                }
+            }
+            
+            //暴露接口
+            return {
+                //执行方法
+                exec: function(type){
+                    //获取第二个参数开始，传递的参数
+                    var args = Array.prototype.slice.call(arguments, 1);
+                    //执行指令
+                    _C[type] && _C[type].apply(null, args);
+                    //链式调用
+                    return this;
+                }
+            }
+        })()
+        // //绘制圆
+        // Command.exec('fillCircle', 100, 100, 50, 'green')
+        // Command.exec('strokeCircle', 300, 300, 50, 'pink')
+        //         //链式调用
+        //        .exec('fillCenterRect', 300, 100,50, 50, 'green')
+        //绘制机器猫
+        Command
+            .exec('strokeCircle', 300, 300, 100)
+            .exec('strokeCircle', 300, 330, 80)
+            //清空两个圆相交的底部
+            .exec('clearRect', 200, 380, 200, 100)
+            .exec('clearCenterRect',300,250,50,20)
+            //左侧眼睛
+            .exec('strokeCircle', 275, 260, 15)
+            .exec('fillCircle', 275, 260, 15, '#fff')
+            .exec('fillCircle', 280, 260, 8, '#000')
+            .exec('fillCircle', 283, 258, 3, '#fff')
+            //右侧眼睛
+            .exec('strokeCircle', 325, 260, 15)
+            .exec('fillCircle', 325, 260, 15, '#fff')
+            .exec('fillCircle', 320, 260, 8, '#000')
+            .exec('fillCircle', 317, 258, 3, '#fff')
+            //鼻子
+            .exec('strokeCircle',300,285,10)
+
+    </script>
+</body>
+</html>

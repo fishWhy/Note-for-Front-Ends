@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单效验（策略模式）</title>
+</head>
+<body>
+    <input type="text">
+    <script>
+        //封装效验算法
+        var strage =(function(){           
+            //效验算法
+            var methods = {
+                //校验数字
+                number: function(value){
+                    //判断数组
+                    if(!/^\d+$/.test(value)){
+                        //不是数字
+                        return '不是数字'
+                    }
+                },
+                //校验内容
+                en: function(value){
+                    //判断数组
+                    if(!/^[a-zA-Z]+$/.test(value)){
+                        //不是数字
+                        return '不都是英文'
+                    }
+                }              
+            }
+            //接口方法
+            return {
+                //校验方法
+                use: function(type, value){
+                    //找到校验策略，校验数据
+                    return methods[type] && methods[type](value)
+                },
+                //添加策略
+                add: function(type, fn){
+                    //存储校验策略
+                    methods[type] = fn;
+                }
+
+            }
+        }
+        )()
+
+        //输入框输入完成
+        var inp = document.getElementsByTagName('input')[0];
+        //失去焦点
+        inp.onblur = function(e){
+            //校验
+            // var result = strage.use('number', e.target.value)
+            // console.log(result)
+
+            //添加校验方法
+            strage.add('nickname', function(value){
+                //校验
+                if(!/^\w{2,8}$/.test(value)){
+                    //提示错误
+                    return '用户名是2到8位的字母数字下划线';
+                }
+            })
+            var result = strage.use('nickname', e.target.value)
+            console.log(result);
+        }
+    </script>
+</body>
+</html>

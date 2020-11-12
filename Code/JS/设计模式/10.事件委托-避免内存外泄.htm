@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托-避免内存外泄</title>
+</head>
+<body>
+    <div id="box">
+        <button id="btn">按钮</button>
+    </div>
+    <script>
+        //点击按钮，box显示“新内容”
+        // var btn = document.getElementById('btn');
+        // var box = document.getElementById('box');
+        // //绑定事件
+        // btn.onclick = function(){
+        //     //更新box的内容
+        //     // 内存外泄：box设置了新的内容，按钮元素被删除了，但是按钮元素绑定了js中的click事件，
+        //     //      因此没有办法销毁，泄露在内存中。
+        //     box.innerHTML = '新内容'
+        // }
+        //在低版本IE浏览器下会产生内存外泄的问题
+        //高版本浏览器垃圾回收机制是计数的，当计数为0时会在某个时间点删除
+        //低版本IE浏览器垃圾回收机制是引用的（指向），当没有变量再引用（指向）它时，它才会被删除
+        //   js中指向了元素，元素指向了js，此时将元素删除，由于还与js有关系，因此不能被垃圾回收机制回收
+        //   如上例子，内存外泄：box设置了新的内容，按钮元素被删除了，但是按钮元素绑定了js中的click事件，
+        //      因此没有办法销毁，泄露在内存中。
+
+        //使用事件委托模式，避免内存外泄
+        var box = document.getElementById('box');
+        //给盒子绑定事件
+        box.onclick = function(e){
+            //判断点击的是否是按钮
+            if(e.target.tagName.toUpperCase()==='BUTTON'){
+                //更新盒子内容
+                box.innerHTML = '新内容';
+            }
+        }
+    </script>
+</body>
+</html>

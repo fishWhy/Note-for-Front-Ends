@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>委托模式数据分发</title>
+</head>
+<body>
+    <div id="header"></div>
+    <div id="body"></div>
+    <div id="footer"></div>
+
+    <script src="../../../../library/jquery-3.5.1.js"></script>
+    <script>
+        // //原先的请求方式
+        // $.get('/data/header.json', function(res){
+        //     Ickt.renderHeader(res.data)
+        // })
+        // $.get('/data/body.json',function(res){
+        //     Ickt.renderBody(res.data);
+        // })
+        // $.get('/data/footer.json',function(res){
+        //     Ickt.renderFooter(res.data);
+        // })
+
+        //委托模式下的数据请求
+        //一次性请求所有数据，将返回得到的数据分发给各个模块
+        //all.json下存储的有原先分散在header.json,body.json,footer.json中的数据
+        $.get('/data/all.json',function(res){
+            Ickt.renderHeader(res.data.header);
+            Ickt.renderBody(res.data.body);
+            Ickt.renderFooter(res.data.footer);
+        })
+
+        //渲染方法
+        var Ickt = {
+            //渲染header
+            renderHeader: function(data){
+                $('#header').html(data)
+            },
+            //渲染body
+            renderBody: function(data){
+                $('#body').html(data)
+            },
+            //渲染footer
+            renderFooter: function(data){
+                $('#footer').html(data)
+            }
+        }
+    </script>
+</body>
+</html>

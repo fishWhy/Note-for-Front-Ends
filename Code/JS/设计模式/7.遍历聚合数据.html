@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遍历聚合数据</title>
+</head>
+<body>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+    </ul>
+    <script src="../../../../library/jquery-3.5.1.js"></script>
+    <script>
+    // 遍历聚合数据，如数组，对象。
+    var arr = [1,2,3,4,5];
+    var obj = {
+        color:'red',
+        msg: 'hello',
+        num: 10
+    }
+    // // ES5中提供了对数组的遍历器
+    // arr.forEach(function(item, index, arr){
+    //     console.log(item, index, arr);
+    // })
+    // //遍历元素
+    // $('li').each(function(index, item){
+    //     console.log(index, item);
+    // })
+    // $.each(arr, function(index, item){
+    //     console.log(index, item);
+    // })
+    // $.each(obj, function(key, value){
+    //     console.log(key, value);
+    // })
+
+    // //模仿ES5中的forEach方法，实现遍历器
+    // Array.prototype.each = function(callback){
+    //     //将循环移到方法内部
+    //     for(var i=0;i<this.length;i++){
+    //         callback(this[i], i, this)
+    //     }
+    // }
+    // //测试
+    // arr.each(function(item, index, arr){
+    //     console.log(item, index, arr);
+    // })
+
+    //遍历数组使用for循环
+    //判断数组a三种方式：1. a instanceof Array. 2. a.constructor. 3.Object.prototype.toString.call(a)
+    //遍历对象使用for in循环
+    function each(data, callback){
+        if( data instanceof Array){
+            //for循环遍历
+            for(var i=0;i<data.length;i++){
+                //执行函数
+                callback(i, data[i])
+            }
+        } else{
+            //遍历对象用for in 循环
+            for(var key in data){
+                //执行函数
+                callback(key, data[key])
+            }
+        }
+    }
+    //数组
+    each(arr, function(index, item){
+        console.log(index, item)
+    })
+    //对象
+    each(obj, function(key, value){
+        console.log(key, value);
+    })
+
+    </script>
+
+
+</body>
+</html>

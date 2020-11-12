@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件委托</title>
+</head>
+<body>
+    <div id="box">
+        <p>1-1-1</p>
+        <p>2-2-2</p>
+        <p>3-3-3</p>
+        <p>4-4-4</p>
+        <h1 class="item">1-1-1</h1>
+        <h1>2-2-2</h1>
+        <h1>3-3-3</h1>
+        <p>5-5-5</p>
+        <p>6-6-6</p>
+        <h1>4-4-4</h1>
+        <p>7-7-7</p>
+        <p>8-8-8</p>
+        <p>9-9-9</p>
+        <h1>5-5-5</h1>
+        <p>10-10-10</p>
+    </div>
+    <script>
+        // //点击p元素，让p元素的背景变成粉色
+        // var p = document.getElementsByTagName('p');
+        // // 绑定事件
+        // for(var i =0;i<p.length;i++){
+        //     p[i].onclick = function(){
+        //         //改变颜色
+        //         this.style.backgroundColor = 'pink'
+        //     }
+        // }
+        // //点击h1元素，让h1元素的背景变成绿色
+        // var h1 = document.getElementsByTagName('h1');
+        // // 绑定事件
+        // for(var i =0;i<h1.length;i++){
+        //     h1[i].onclick = function(){
+        //         //改变颜色
+        //         this.style.backgroundColor = 'green'
+        //     }
+        // }
+
+        //1.利用事件委托技术，将事件绑定在父元素，减少事件数量
+        //获取父元素
+        var box = document.getElementById('box');
+        //给父元素绑定事件
+        box.onclick = function(e){
+            //根据元素的特征，判断是哪类元素，做相应的处理
+            var dom = e.target;
+            if(dom.className === 'item'){
+                dom.style.backgroundColor = 'orange';
+            }else if(dom.tagName.toUpperCase()==='P'){
+                dom.style.backgroundColor = 'pink';
+            }else if(dom.tagName.toUpperCase() === 'H1'){
+                dom.style.backgroundColor = 'green';
+            }
+        }
+
+        //2.利用事件委托技术,可以预言未来元素：新增的元素也可以绑定事件
+        //如下例，创建一个新成员时h1标签时，如果使用原先的模式，
+        //在页面中点击该h1标签背景并不能变成绿色；但是如果使用事件委托模式，在页面中点击h1标签背景就会变成绿色。
+        var newH1 = document.createElement('h1');
+        newH1.innerHTML = '这是一个新的h1元素'
+        //上树
+        document.getElementById('box').appendChild(newH1);
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+    "data":{
+        "header":"header内容",
+        "body":"body内容",
+        "footer":"footer内容"
+    }
+}
