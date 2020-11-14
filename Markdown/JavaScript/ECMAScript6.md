@@ -971,7 +971,7 @@ let Player = (x,y)=>{
 let p = new Player(100,200);//报错
 ```
 
-3.箭头函数中的this指向永远是<font color=red>**定义时的（定义它时的父级作用域）**</font><br>
+3.箭头函数中的this指向永远是<font color=red>**定义时的（定义它时的父级作用域，也就是说其外部函数的this对象）**</font><br>
 
 &emsp;&emsp;在普通函数中，this是<font color=red>执行时的</font>上下文对象，谁调用指向谁。
 
@@ -1535,4 +1535,1025 @@ get： 获取数据				set：设置数据
 ```
 
 <font color=red>**由于weakmap不能被垃圾回收机制自动回收，因此要慎用**</font>
+
+### 6.迭代器接口
+
+ 在ES6中，只实现了迭代器接口（Symbol.iterator），并没有实现迭代器接口类，有四种情况会实现迭代器接口。<br>
+
+&emsp;&emsp;1 使用迭代器接口方法的时候，如keys, values, entries等。<br>
+
+&emsp;&emsp;2. 在解构的时候。<br>
+
+&emsp;&emsp;3.在创建map，set对象的时候。<br>
+
+&emsp;&emsp;4.在使用for of循环的时候。<br>
+
+迭代器的作用：<br>
+
+&emsp;&emsp;1.定义了我们访问数据的次序。	2.为for of提供了访问数据的方式。<br>
+
+&emsp;&emsp;3.让所有数据具备统一的接口，可以方便而快捷的获取数据。<br>
+
+<font color=red>注意：类数组对象实现了迭代器接口(但自定义的类数组对象没有迭代器接口)，对象没有实现迭代器接口。</font><br>
+
+```html
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<script>
+//类数组对象实现了迭代器接口
+//获取div
+    var divs = document.getElementsByTagName('div');
+    console.log(divs);
+    //遍历
+    for(let item of divs){
+        console.log(item);
+    }
+    
+    //定义函数
+    function demo(){
+        console.log(arguments);
+        for(let item of arguments){
+        	console.log(item);
+    	}
+    }
+    demo(1,2,3)
+</script>
+```
+
+类数组对象：可以通过索引值访问数据，有length属性。但自定义的类数组对象只有实现了迭代器接口才能使用for of遍历等，否则不行。
+
+<font color=red>**定义有迭代器接口的类数组对象**</font>
+
+```javascript
+//自定义类数组对象
+var arrLike1 = {
+    0:'red',
+    1:'green',
+    2:'blue',
+    length:3,
+    //为了使用for of 循环，实现迭代器接口
+    //引用数组迭代器接口
+    [Symbol.iterator]:Array.prototype[Symbol.iterator]
+}
+
+//自定义类数组对象
+var arrLike2 = {
+    0:'red',
+    1:'green',
+    2:'blue',
+    length:3,
+    //为了使用for of 循环，实现迭代器接口
+    //引用数组迭代器接口
+    [Symbol.iterator](){
+        //定义当前的索引值
+        let index=0;
+        //返回一个具有next方法的对象
+        return {
+            //利用箭头函数，让内外this相等
+            next:()=>{
+                //判断是否超出长度
+                if(index<this.length){
+                    //正确返回，没有遍历完成
+                    //每次迭代都要更改this
+                    return {value:this[index++],done:false}
+                }else{
+                    //遍历完成done是true，value是undefined
+                    return {done:true,value:undefined}
+                }
+            }
+        }
+    }
+}
+
+//遍历
+for(let item of arrLike2){
+    console.log(item);
+}
+```
+
+### 7.Promise规范
+
+#### 规范
+
+Promise是将异步写法变成同步写法的规范<br>
+
+&emsp;&emsp;只是写法的改变，操作并没有改变<br>
+
+&emsp;&emsp;异步操作：在回调函数中，一层嵌套一层。<br>
+
+&emsp;&emsp;同步操作：将方法写在外部<br>
+
+三个状态：<br>
+
+&emsp;&emsp;pending 表示操作正在执行		resolved 表示操作执行成功	rejected 表示操作执行失败<br>
+
+状态的流向：在Promise中状态有两个方向的流向：<br>
+
+&emsp;&emsp;状态由pending流向resolved，说明操作执行成功完毕<br>
+
+&emsp;&emsp;状态由pending流向reject，说明操作执行失败完毕<br>
+
+<font color=red>**对Promise的理解可以类比成事件的机制，resolved, reject触发事件，then捕获事件**</font>
+
+#### 语法
+
+语法： new Promise((resolve,reject)=>{回调函数中执行异步操作})<br>
+
+&emsp;&emsp;如果操作执行成功执行resolve方法   如果操作执行失败执行reject方法<br>
+
+在外部通过then方法监听状态的改变<br>
+
+&emsp;&emsp;then(success, fail)该方法接收两个参数<br>
+
+&emsp;&emsp;&emsp;&emsp;success:表示成功的时候执行的回调函数，参数是由resolve方法执行的时候传递的参数（只能传递一个）。<br>
+
+&emsp;&emsp;&emsp;&emsp;fail:表示失败时候执行的回调函数，参数时由reject方法执行的时候传递的参数（只能传递一个）<br>
+
+<font color=red>**then方法的 返回值是Promise对象，因此，可以链式调用该方法**</font><br>
+
+&emsp;&emsp;上一个then方法的输出，将作为下一个then方法参数的输入。<br>
+
+&emsp;&emsp;如果操作已经执行完毕，then方法也会立即执行。<br>
+
+```javascript
+//同步
+function demo(){
+    console.log('demo run');
+}
+demo();
+console.log('next');
+
+//异步
+setTimeout(()=>{
+    console.log('异步demo1 run');
+    setTimeout(()=>{
+          console.log('异步demo2 run');
+    },1000)
+},1000)
+console.log('next1')
+```
+
+异步存在的问题，异步会嵌套的很深
+
+```javascript
+//异步存在的问题，异步会嵌套的很深
+setTimeout(()=>{
+    console.log('异步demo1 run');
+    setTimeout(()=>{
+          console.log('异步demo2 run');
+          setTimeout(()=>{
+              //继续嵌套异步操作
+              ...
+          }
+    },1000)
+},1000)
+```
+
+<font color=red>**Promise将异步写法变成同步写法。**</font>
+
+```javascript
+//将console.log写在异步操作的后面
+let p = new Promise((resolve, reject)=>{
+    //处理异步(同步也可以安装Promise的写法)
+    setTimeout(()=>{
+        //成功,传递的参数需要是单个参数，可以将多个参数方在一个数组或对象
+        resolve(['操作成功', 100, 200])
+        //失败,传递的参数需要是单个参数，可以将多个参数方在一个数组或对象
+        //reject({'执行失败',200,false})
+    },1000)
+})
+//操作后面监听结果
+p
+	.then(
+        //成功时候的回调函数
+        (...args)=>{
+            console.log('success',args);
+            return 200
+        },
+        //失败的时候的回调函数
+        (...args)=>{
+            console.log('fial',args);
+        }
+    )
+	//链式调用
+	.then(
+        (...args)=>{
+            console.log('第二次执行了',args)
+        }
+    )
+//结果：
+//success [Array(3)]
+//第二次执行了 [200]
+```
+
+**简单实现Promise（有瑕疵，但足以应付面试）**
+
+```javascript
+//实现Promise
+function IcktPromise(callback){
+    //维护状态
+    this.status = 'pending';
+    //存储回调函数
+    this.successArray = [];
+    this.failArray = [];
+    
+    //定义resolve和reject方法
+    //成功
+    let resolve = value=>{
+        //改变状态
+        this.status = 'resolved';
+        //执行回调函数
+        this.successArray.forEach(fn=>value=fn(value));
+        //清空函数队列
+        this.successArray = [];
+        //存储新的value
+        this.value = value;
+    }
+    //失败
+    let reject = value=>{
+        //改变状态
+        this.status = 'rejected';
+        //执行函数
+        this.failArray.forEach(fn=>value=fn(value));
+        //清空队列
+        this.failArray = [];
+        //存储新的value
+        this.value = value;
+    };
+    
+    //执行回调函数
+    try {
+        callback(resolve, reject)
+    }catch(e){
+        //有错误就失败了
+        reject(e)
+    }
+}
+
+//原型方法
+IcktPromise.prototype.then = function(success, fail){
+    //判断当前状态
+    if(this.status==='pending'){
+        //存储回调函数
+        success&&this.successArray.push(success);
+        fail&&this.failArray.push(fail);
+    } else if(this.status==='resolved'){
+        //立即执行
+        success&&success(this.value);
+    } else{        
+        fail&&fail(this.value);
+    }
+    //链式调用
+    return this;
+}
+
+//测试，将console.log写在异步操作的后面
+let p = new IcktPromise((resolve, reject)=>{
+    //处理异步(同步也可以安装Promise的写法)
+    setTimeout(()=>{
+        //成功,传递的参数需要是单个参数，可以将多个参数方在一个数组或对象
+        resolve(['操作成功', 100, 200])
+        //失败,传递的参数需要是单个参数，可以将多个参数方在一个数组或对象
+        //reject({'执行失败',200,false})
+    },1000)
+    //由then的定义可以看出，这里正是有setTimeout，p才会先加载后面then中方法，再执行这些方法，then中函数的参数是之前then中函数的返回值。如果没有setTimeout，会直接执行then中的方法，传递给这些函数的参数永远只是['操作成功', 100, 200]。
+})
+//操作后面监听结果
+p
+	.then(
+        //成功时候的回调函数
+        (...args)=>{
+            console.log('success，第一次执行了',args);
+            return 200
+        },
+        //失败的时候的回调函数
+        (...args)=>{
+            console.log('fial，第一次执行了',args);
+        }
+    )
+	//链式调用
+	.then(
+        (...args)=>{
+            console.log('success，第二次执行了',args)
+        },
+    	(...args)=>{
+    	        console.log('fial，第二次执行了',args)
+    	 }
+    )
+//结果：
+//success，第一次执行了 [Array(3)]
+//success，第二次执行了 [200]
+```
+
+#### 监听状态
+
+有三个方法可以监听Promise状态:
+
+&emsp;&emsp;then:可以监听状态成功或者是失败的方法<br>
+
+&emsp;&emsp;&emsp;&emsp;定义多个then方法，此时后一个then方法可以监听前一个then的成功与失败。<br>
+
+&emsp;&emsp;catch:可以监听状态失败时候的方法<br>
+
+&emsp;&emsp;&emsp;&emsp;失败只能被监听一次,但是还可以被后面的then继续监听。<br>
+
+&emsp;&emsp;finally:无论成功还是失败都会执行的方法<br>
+
+&emsp;&emsp;&emsp;&emsp;无法接收数据, 后面的then还可以监听<br>
+
+```javascript
+//将console.log写在异步操作的后面
+let p = new Promise((resolve, reject)=>{
+    //处理异步(同步也可以安装Promise的写法)
+    setTimeout(()=>{
+        //失败,传递的参数需要是单个参数，可以将多个参数方在一个数组或对象
+        reject('执行失败',200,false)
+    },1000)
+})
+//操作后面监听结果
+p
+	//catch方法监听事变
+	//.catch(err=>console.log('失败',err))//可以被下面then中的sucess回调函数监听到
+	.catch((err)=>{
+    		console.log('catch err')
+    		throw new Error('抛出了一个错误')
+			})//可以被下面then中的fial回调函数监听到
+	.catch(err=>console.log('第二次监听失败',err))
+	//链式调用
+	.then(
+        (...args)=>{
+            console.log('success，第一次执行了',args)
+        },
+    	(...args)=>{
+    	        console.log('fial，第一次执行了',args)
+    	 }
+    )
+	.finally(data=>console.log('finally',data))
+//结果：
+//catch err
+//第二次监听失败 Error: 抛出了一个错误
+//    at <anonymous>:14:13
+//success，第一次执行了 [undefined]
+//finally undefined
+```
+
+#### all
+
+all方法用于监听多个Promise对象<br>
+
+&emsp;&emsp;参数是一个数组，数组中的每一项都是一个Promise对象。<br>
+
+我们可以通过then方法监听状态的改变<br>
+
+&emsp;&emsp;如果所有操作都执行成功，才会执行success方法。<br>
+
+&emsp;&emsp;如果有一个请求失败，则会执行fail方法。<br>
+
+&emsp;&emsp;不论是成功还是失败，返回值是 数组，数组中的每一个成员对应每一个promise返回的数据。<br>
+
+```javascript
+ <button id='btn'>按钮</button>
+ <script>
+     let btn = document.getElementById('btn')
+     var p1 = new Promise((resolve,reject)=>{
+     setTimeout(()=>{
+             console.log('第一个异步操作执行完毕')
+             //成功
+             resolve('first')
+         },1000)
+     })
+     var p2 = new Promise((resolve,reject)=>{
+         setTimeout(()=>{
+             console.log('第二个异步操作执行完毕')
+             //成功
+             resolve('second')
+         },2000)
+     })
+     var p3 = new Promise((resolve,reject)=>{
+         setTimeout(()=>{
+             console.log('第三个异步操作执行完毕')
+             btn.onclick = function(){
+                 console.log('click btn')
+                 resolve('third')
+             }
+            
+         },2000)
+     })
+     //都执行完毕，打印success
+     Promise.all([p2,p1,p3])//p1,p2,p3的先后顺序决定了传给then的数据的顺序
+     	//监听结果
+     	.then(
+     		//成功的回调函数
+         	data=>console.log('success',data),
+         	//失败的回调函数
+         	err=>console.log('fail',err)
+</script>
+输出：
+//第一个异步操作执行完毕
+//第二个异步操作执行完毕
+//第三个异步操作执行完毕
+点击按钮后才会显示
+//click btn
+//success (3) ["second", "first", "third"]
+```
+
+#### race
+
+race方法用于监听多个Promise对象<br>
+
+&emsp;&emsp;参数是一个数组，数组中的每一项都是一个Promise对象<br>
+
+我们可以通过then方法监听状态的改变（监听第一次promise对象状态的改变）<br>
+
+&emsp;&emsp;如果有一个请求执行成功，就会执行success方法<br>
+
+&emsp;&emsp;如果有一个请求事变，则会执行fail方法<br>
+
+&emsp;&emsp;返回值是状态改变的时候传递的数据<br>
+
+```javascript
+ <button id='btn'>按钮</button>
+ <script>
+     let btn = document.getElementById('btn')
+     var p1 = new Promise((resolve,reject)=>{
+     setTimeout(()=>{
+             console.log('第一个异步操作执行完毕')
+             //成功
+             resolve('first')
+         },1000)
+     })
+     var p2 = new Promise((resolve,reject)=>{
+         setTimeout(()=>{
+             console.log('第二个异步操作执行完毕')
+             //成功
+             resolve('second')
+         },2000)
+     })
+     var p3 = new Promise((resolve,reject)=>{
+         setTimeout(()=>{
+             console.log('第三个异步操作执行完毕')
+             btn.onclick = function(){
+                 console.log('click btn')
+                 resolve('third')
+             }
+            
+         },2000)
+     })
+     //都执行完毕，打印success
+     Promise.race([p2,p1,p3])//p1,p2,p3的先后顺序决定了传给then的数据的顺序
+     	//监听结果
+     	.then(
+     		//成功的回调函数
+         	data=>console.log('success',data),
+         	//失败的回调函数
+         	err=>console.log('fail',err)
+</script>
+输出：
+//第一个异步操作执行完毕
+//success first
+//第二个异步操作执行完毕
+//第三个异步操作执行完毕
+点击按钮后才会显示
+//click btn
+
+```
+
+#### resolve与reject
+
+resolve是Promise的静态方法，<font color=red>返回一个可以监听resolved状态的promise对象</font><br>
+
+&emsp;&emsp;参数有三种：<br>
+
+&emsp;&emsp;&emsp;&emsp;js数据(数组，对象，数字等)，此时then方法会立即执行（then方法接收的数据就是该数据）<br>
+
+&emsp;&emsp;&emsp;&emsp;promise对象<br>
+
+&emsp;&emsp;&emsp;&emsp;thenable参数（带有then方法的对象）<br>
+
+```javascript
+var p1 = Promise.resolve(100);
+//监听结果
+p1.then(
+	//成功
+    data=>console.log('success',data),
+    //失败
+    err=>console.log('fail',err)
+)
+//success 100
+```
+
+```javascript
+var p1 = Promise.resolve(
+			new Promise((resolve,reject)=>{
+                //setTimeout(()=>resolve(200),1000)
+                setTimeout(()=>reject(200),1000)
+            })
+		);
+//监听结果
+p1.then(
+	//成功
+    data=>console.log('success',data),
+    //失败
+    err=>console.log('fail',err)
+)
+//fail 200
+```
+
+```javascript
+var p1 = Promise.resolve({
+    color:'red',
+    //then方法
+    then(resolve,reject){
+        //异步操作
+        setTimeout(()=>{
+            //resolve(500)
+            reject(600)
+        },1000)
+    }
+});
+//监听结果
+p1.then(
+	//成功
+    data=>console.log('success',data),
+    //失败
+    err=>console.log('fail',err)
+)
+//fail 600
+```
+
+reject是Promise的静态方法，<font color=red>返回一个可以监听rejected状态的对象</font><br>
+
+&emsp;&emsp;then方法监听失败时候，回调函数的参数就是reject方法参数（错误的描述信息）<br>
+
+&emsp;&emsp;<font color=red>不论reject方法是什么数据，then都将执行失败的回调函数。</font><br>
+
+```javascript
+var p1 = Promise.reject(100);
+//监听结果
+p1.then(
+	//成功
+    data=>console.log('success',data),
+    //失败
+    err=>console.log('fail',err)
+)
+//fail 100
+```
+
+```javascript
+var p1 = Promise.reject(
+			new Promise((resolve,reject)=>{
+                setTimeout(()=>resolve(200),1000)
+                //setTimeout(()=>reject(200),1000)
+            })
+		);
+//监听结果
+p1.then(
+	//成功
+    data=>console.log('success',data),
+    //失败
+    err=>console.log('fail',err)
+)
+)
+//fail Promise {<pending>}
+//				__proto__: Promise
+//				[[PromiseStatus]]: "fulfilled"
+//				[[PromiseValue]]: 200
+```
+
+```javascript
+var p1 = Promise.reject({
+    color:'red',
+    //then方法
+    then(resolve,reject){
+        //异步操作
+        setTimeout(()=>{
+            resolve(500)
+            //reject(600)
+        },1000)
+    }
+});
+//监听结果
+p1.then(
+	//成功
+    data=>console.log('success',data),
+    //失败
+    err=>console.log('fail',err)
+)
+//fail 	{color: "red", then: ƒ}
+//		color: "red"
+//		then: then(resolve,reject){ //异步操作 setTimeout(()=> {…}
+//		__proto__: Object
+```
+
+### 8.generator函数
+
+#### generator函数
+
+generator函数<font color=red>为处理异步编程提供了解决方法（异步函数）</font>，内部封装了大量的状态，允许我们逐条遍历<br>语法：function *demo(){函数中定义状态}<br>
+
+&emsp;&emsp;在函数内部通过yield关键字定义状态，yield表示暂停的意思<br>
+
+&emsp;&emsp;&emsp;&emsp;注意：yield关键字只能出现在generator函数中<br>
+
+&emsp;&emsp;&emsp;&emsp;通过return定义最后一个状态，return后面的状态不会执行<br>
+
+generator函数的返回值实现了next方法，因此可以通过next方法逐条遍历内部的状态。<br>
+
+&emsp;&emsp;next方法的返回值是一个对象<br>
+
+&emsp;&emsp;&emsp;&emsp;done属性：表示是否遍历完成<br>
+
+&emsp;&emsp;&emsp;&emsp;value属性：表示状态值<br>
+
+&emsp;&emsp;next方法返回的状态对象<br>
+
+&emsp;&emsp;&emsp;&emsp;如果有状态的情况下，done是false，value是状态值。<br>
+
+&emsp;&emsp;&emsp;&emsp;如果没有状态，此时done是true，value是undefined<br>
+
+generator函数的返回值也实现了迭代器接口，因此也可以通过for of方式遍历内部的状态<br>
+
+&emsp;&emsp;<font color=red>但是不要同时使用两种方式去遍历内部的状态(即尽量不要混合使用next和for of)</font><br>
+
+&emsp;&emsp;因此，一方遍历完成，另一方就得不到状态了<br>
+
+当generator函数遍历完成之后，此时它的状态变成为closed<br>
+
+当generator函数没有遍历完成的时候，此时它的状态变为suspended<br>
+
+```javascript
+//function与函数名之间的*放的位置以下四种都可以
+//function* demo()
+//function * demo()
+//function*demo()
+function *demo(){
+    console.log('demo')
+    //定义状态
+    yield '起床';
+    yield '吃饭';
+    yield '学习';
+    yield '吃饭';
+    yield '自习';
+    yield '睡觉';
+    return '进入梦乡';  
+}
+//执行
+var g = demo();//generator函数的执行相当于将其初始化，内部的语句还没有执行
+//通过next方法遍历状态
+console.log(g.next());//	demo  {value: "起床", done: false}
+console.log(g.next());//	{value: "吃饭", done: false}
+console.log(g.next());//	{value: "学习", done: false}
+console.log(g.next());//	{value: "吃饭", done: false}
+console.log(g.next());//	{value: "自习", done: false}
+console.log(g.next());//	{value: "睡觉", done: false}
+console.log(g.next());//	{value: "进入梦乡", done: true}
+console.log(g.next());//	{value: undefined, done: true}
+console.log(g.next());//	{value: undefined, done: true}
+console.log(g.next());//	{value: undefined, done: true}
+
+
+//实现了迭代器接口，通过for of循环遍历
+//注意：for of循环无法遍历return 语句
+//想再次遍历要重新执行
+var g2 = demo();//generator函数的执行相当于将其初始化，内部的语句还没有执行
+for(let item of g2){
+    console.log('t')
+    console.log(item);
+}
+//输出如下：
+//demo
+//t
+//起床
+//t
+//吃饭
+//t
+//学习
+//t
+//吃饭
+//t
+//自习
+//t
+//睡觉
+
+//想再次遍历要重新执行
+var g3 = demo()//generator函数的执行相当于将其初始化，内部的语句还没有执行
+//通过next方法遍历状态
+console.log(g3.next());
+//输出：	demo  {value: "起床", done: false}
+for(let item of g3){
+    console.log('t')
+    console.log(item);
+}
+//输出如下
+//t
+//吃饭
+//t
+//学习
+//t
+//吃饭
+//t
+//自习
+//t
+//睡觉
+```
+
+<font color=red>**用途：异步变成同步**</font>
+
+```javascript
+//异步变成同步
+function *ickt(){
+    yield setTimeout(function(){
+        console.log(111)
+    },1000)
+    yield setTimeout(function(){
+        console.log(222)
+    },2000)
+    yield setTimeout(function(){
+        console.log(333)
+    },3000)
+}
+//执行
+var g = ickt();//generator函数的执行相当于将其初始化，内部的语句还没有执行
+g.next();//输出： {value: 1, done: false}     再过1s种输出：111
+g.next();//输出： {value: 2, done: false}     再过2s种输出：222
+```
+
+#### generator函数的数据传递
+
+在generator函数中数据传递有两个方向：<br>
+
+&emsp;&emsp;1数据由generator函数的内部流向外部<br>
+
+&emsp;&emsp;2.数据由generator函数的外部流向内部<br>
+
+数据由内部流向外部<br>
+
+&emsp;&emsp;1.通过yield表达式定义状态值。<br>
+
+&emsp;&emsp;2.在外部通过next方法返回的对象中的value属性获取。<br>
+
+```javascript
+//数据由内部流向外部
+//定义generator函数
+function *demo(){
+    yield 'red';
+    yield 'green';
+    yield 'blue';
+}
+//创建
+var g = demo();//generator函数的执行相当于将其初始化，内部的语句还没有执行
+//获取内部状态值
+console.log(g.next());	//{value: "red", done: false}
+console.log(g.next());	//{value: "green", done: false}
+console.log(g.next());	//{value: "blue", done: false}
+```
+
+<font color=red>数据由外部流向内部</font><br>
+
+&emsp;&emsp;1.在外部通过next方法传递数据。<br>
+
+&emsp;&emsp;2.在内部通过yield表达式接收数据。<br>
+
+```javascript
+//数据由外部流向内部
+//定义generator函数
+function *demo(num1){
+    console.log(1,num1)
+    var num2 = yield 'red';
+    console.log(2,num2)
+    var num3 = yield 'green';
+    console.log(3,num3)  
+    var num4 = yield 'blue';
+    console.log(4,num4)
+}
+//创建。给方法传递数据，可以在内部接收
+var g = demo(000);//generator函数的执行相当于将其初始化，内部的语句还没有执行
+//第一次执行next方法，相当于从函数开始执行到第一个yield关键字并暂停。
+//注意，第一次执行next方法表示启动，所以传递的数据是无效的，（工作中第一次执行next方法，不需要传递数据，数据可以由demo方法传递）
+console.log(g.next(111));	// 1 0  {value: "red", done: false}
+//第二次执行next方法，相当于函数从第一个yield执行到第二个yield，并暂停
+console.log(g.next(222));	//2 222 {value: "red", done: false}
+console.log(g.next(333));	//3 333 {value: "green", done: false}
+console.log(g.next(444));	//4 444	{value: "blue", done: false}
+console.log(g.next(555));	//{value: undefined, done: true}
+//1.demo执行相当于初始化   2.第一个next方法执行相当于启动   3.第二个next方法就可以正常的运行了(从上次停止的位置到下一个yield)
+```
+
+#### return,throw
+
+return<br>
+
+&emsp;&emsp;在generator函数的原型中提供了return 方法，用于在外部停止内部状态的遍历
+
+```javascript
+//generator函数
+function *demo(){
+    try{
+        yield 1;
+        yield 2;
+    } catch(e){
+        yield 3;
+        yield 4;
+    } finally{
+        yield 5;
+        yield 6;
+    }
+    yield 7;
+    yield 8
+    //return 表示内部语句运行完毕，不会在继续原型了
+    return 9;
+    //后面的yield无意义，不可能通过next来访问到
+    yield 10;
+    yield 11;
+}
+var g = demo();
+console.log(g.next());	//{value: 1, done: false}
+console.log(g.next());	//{value: 2, done: false}
+//打断执行，打断后就结束了，后面的yield与return等不起作用了。
+//传递的数据，就是打断时候的value值
+console.log(g.return(100));	//{value: 100, done: true}
+console.log(g.next());	//{value: undefined, done: true}
+```
+
+&emsp;&emsp;如果在函数体中出现了finally语法，return语句将延后执行
+
+```javascript
+//generator函数
+function *demo(){
+    try{
+        yield 1;
+        yield 2;
+    } catch(e){
+        yield 3;
+        yield 4;
+    } finally{
+        yield 5;
+        yield 6;
+    }
+    yield 7;
+    yield 8
+    //return 表示内部语句运行完毕，不会在继续原型了
+    return 9;
+    //后面的yield无意义，不可能通过next来访问到
+    yield 10;
+    yield 11;
+}
+var g = demo();
+console.log(g.next());	//{value: 1, done: false}
+console.log(g.next());	//{value: 2, done: false}
+//打断执行，打断后就结束了，后面的yield与return等不起作用了。
+//传递的数据，就是打断时候的value值
+console.log(g.return(100));	//{value: 5, done: true}
+console.log(g.next());	//{value: 6, done: false}
+console.log(g.next());	////{value: 100, done: true}
+console.log(g.next());	//{value: undefined, done: true}
+```
+
+throw<br>
+
+&emsp;&emsp;在generator函数的原型中提供了throw方法，允许在外部抛出错误<br>
+
+```javascript
+//generator函数
+function *demo(){
+    yield 1;
+	yield 2;
+	yield 3;
+    yield 4;
+	yield 5;
+    //return 表示内部语句运行完毕，不会在继续原型了
+    return 6;
+    //后面的yield无意义，不可能通过next来访问到
+    yield 10;
+}
+var g = demo();
+console.log(g.next());	//{value: 1, done: false}
+console.log(g.next());	//{value: 2, done: false}
+//爬出错误 与throw new Error(111);作用一样抛出错误打断程序运行
+console.log(g.throw(new Error('这是第一个错误')));
+//
+```
+
+&emsp;&emsp;为了代码正常执行，我们可以在状态函数体中通过try catch语句去捕获错误<br>
+
+```javascript
+//generator函数
+function *demo(){
+    try{       
+    	yield 1;
+		yield 2;
+		yield 3;
+    }catch{
+    	yield 4;
+		yield 5;
+    }finally{
+        yield 6;
+		yield 7;
+    }
+    //return 表示内部语句运行完毕，不会在继续原型了
+    return yield 8;
+    //后面的yield无意义，不可能通过next来访问到
+    yield 9;
+}
+var g = demo();
+console.log(g.next());	//{value: 1, done: false}
+console.log(g.next());	//{value: 2, done: false}
+//爬出错误 与throw new Error(111);作用一样抛出错误打断程序运行
+//区别是throw方法抛出的错误会被内部catch语句接收，throw关键字抛出的错误，不能被内部接收
+console.log(g.throw(new Error('这是第一个错误')));//{value: 4, done: false}
+console.log(g.next());	//{value: 5, done: false}
+console.log(g.next());	//{value: 6, done: false}
+console.log(g.next());	//{value: 7, done: false}
+console.log(g.next());	//{value: 8, done: true}
+console.log(g.next());	//{value: undefined, done: true}
+```
+
+&emsp;&emsp;如果外部抛出两个错误：<br>
+
+&emsp;&emsp;&emsp;&emsp;第一个错误在状态函数体中通过try catch语句去捕获第一个错误。<br>
+
+&emsp;&emsp;&emsp;&emsp;第二个错误在状态函数体外部通过try catch语句去捕获第二个错误。<br>
+
+```javascript
+//generator函数
+function *demo(){
+    try{       
+    	yield 1;
+		yield 2;
+		yield 3;
+    }catch{
+    	yield 4;
+		yield 5;
+    }finally{
+        yield 6;
+		yield 7;
+    }
+    //return 表示内部语句运行完毕，不会在继续原型了
+    return yield 8;
+    //后面的yield无意义，不可能通过next来访问到
+    yield 9;
+}
+var g = demo();
+console.log(g.next());	//{value: 1, done: false}
+console.log(g.next());	//{value: 2, done: false}
+//爬出错误 与throw new Error(111);作用一样抛出错误打断程序运行
+//区别是throw方法抛出的错误会被内部catch语句接收，throw关键字抛出的错误，不能被内部接收
+console.log(g.throw(new Error('这是第一个错误')));//{value: 4, done: false}
+//在遍历catch语句状态的时候，再次抛出错误，会打断状态遍历，但是会将finally语句的状态遍历
+console.log(g.throw(new Error('这是第一个错误')));//{value: 6, done: false}
+console.log(g.next());	//{value: 7, done: false}
+console.log(g.next());	//报错：Uncaught Error: 这是第一个错误
+```
+
+```javascript
+//generator函数
+function *demo(){
+    try{       
+    	yield 1;
+		yield 2;
+		yield 3;
+    }catch{
+    	yield 4;
+		yield 5;
+    }finally{
+        yield 6;
+		yield 7;
+    }
+    //return 表示内部语句运行完毕，不会在继续原型了
+    return yield 8;
+    //后面的yield无意义，不可能通过next来访问到
+    yield 9;
+}
+
+//第一次抛出被内部catch捕获，第二次抛出被外部catch语句捕获，error后面的语句不会再执行了，但是catch后面的语句可以正常的执行。
+//catch语句只能捕获一个错误，再次抛出错误无法捕获
+var g = demo();
+try{
+	console.log(g.next());	//{value: 1, done: false}
+	console.log(g.next());	//{value: 2, done: false}
+	//爬出错误 与throw new Error(111);作用一样抛出错误打断程序运行
+	//区别是throw方法抛出的错误会被内部catch语句接收，throw关键字抛出的错误，不能被内部接收
+	console.log(g.throw(new Error('这是第一个错误')));//{value: 4, done: false}
+	//在遍历catch语句状态的时候，再次抛出错误，会打断状态遍历，但是会将finally语句的状态遍历
+	console.log(g.throw(new Error('这是第二个错误')));//{value: 6, done: false}
+	console.log(g.next());	//{value: 7, done: false}
+    //一定要再有一个next，否则捕获不到错误
+    console.log(g.next());//
+    console.log(g.next());//
+    console.log(g.next());//
+}catch(e){
+    console.log('outer',e)	//捕获错误并输出：outer Error: 这是第一个错误
+}
+console.log(g.next());//{value: undefined, done: true}
+```
+
+
+
+
+
+
+
+
 

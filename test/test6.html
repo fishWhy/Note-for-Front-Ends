@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id='btn'>按钮</button>
+    <script>
+        let btn = document.getElementById('btn')
+        var p1 = new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+                console.log('第一个异步操作执行完毕')
+                //成功
+                resolve('first')
+            },1000)
+        })
+        var p2 = new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+                console.log('第二个异步操作执行完毕')
+                //成功
+                resolve('second')
+            },2000)
+        })
+        var p3 = new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+                console.log('第三个异步操作执行完毕')
+                btn.onclick = function(){
+                    console.log('click btn')
+                    resolve('third')
+                }
+               
+            },2000)
+        })
+
+        //都执行完毕，打印success
+        Promise.race([p2,p1,p3])//p1,p2的先后顺序决定了传给then的数据的顺序
+        	//监听结果
+        	.then(
+        		//成功的回调函数
+            	data=>console.log('success',data),
+            	//失败的回调函数
+            	err=>console.log('fail',err)
+        	)
+    </script>
+</body>
+</html>
