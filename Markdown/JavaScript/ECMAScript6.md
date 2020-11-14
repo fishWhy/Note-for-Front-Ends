@@ -2151,7 +2151,7 @@ p1.then(
 
 #### generator函数
 
-generator函数<font color=red>为处理异步编程提供了解决方法（异步函数）</font>，内部封装了大量的状态，允许我们逐条遍历<br>语法：function *demo(){函数中定义状态}<br>
+generator函数<font color=red>为处理异步编程提供了解决方法（异步函数）</font>，内部封装了大量的状态，允许我们逐条遍历<br>语法：function *demo(){函数中定义状态}<br>（注意：不能作为构造函数使用）
 
 &emsp;&emsp;在函数内部通过yield关键字定义状态，yield表示暂停的意思<br>
 
@@ -2340,6 +2340,10 @@ console.log(g.next(444));	//4 444	{value: "blue", done: false}
 console.log(g.next(555));	//{value: undefined, done: true}
 //1.demo执行相当于初始化   2.第一个next方法执行相当于启动   3.第二个next方法就可以正常的运行了(从上次停止的位置到下一个yield)
 ```
+
+<font color=red>第一个next(111)从函数开始到yield ’red‘停止。<br>第二个next(222)从 上一次停止的位置开始，var num2 = 222，到yield 'green'停止。<br>第三个next(333)从 上一次停止的位置开始，var num3 = 333，到yield 'blue'停止。<br>第四个next(444)从 上一次停止的位置开始，var num4 = 444，到函数结束。<br>第五个next(555)直接返回{value: undefined, done: true}。</font>
+
+
 
 #### return,throw
 
@@ -2549,11 +2553,259 @@ try{
 console.log(g.next());//{value: undefined, done: true}
 ```
 
+#### yield*
+
+yield*语法<br>
+
+&emsp;&emsp;可以将函数内部的状态复制到另一个函数体中执行<br>
+
+```javascript
+//定义状态
+function *demo(){
+    yield 1;
+    yield 2;
+}
+//状态函数
+function *ickt1(){
+    yield 3;
+    var d = demo();
+    for(var state of d){
+        yield state;
+    }
+    yield 4;
+}
+//ickt1状态函数等价于ickt2
+function *ickt2(){
+    yield 3;
+    //yield *demo();  yield * demo();  yield*demo();
+    yield* demo();
+    yield 4;
+}
+//测试
+var g = ickt2();
+console.log(g.next());//{value: 3, done: false}
+console.log(g.next());//{value: 1, done: false}
+console.log(g.next());//{value: 2, done: false}
+console.log(g.next());//{value: 4, done: false}
+console.log(g.next());//{value: undefined, done: true}
+```
+
+三个点语法<br>
+
+&emsp;&emsp;使用三个点语法解构的时候，可以将一个状态函数体中的所有状态值获取到。<br>
+
+```javascript
+//定义状态
+function *demo(){
+    yield 1;
+    yield 2;
+}
+//执行demo
+var d = demo();
+//查看状态，next，for of
+console.log(...d)//输出：1 2
+```
+
+generator函数的this<br>
+
+&emsp;&emsp;在generator函数中的this指向window<br>
+
+&emsp;&emsp;所以，不能通过this去添加任何的属性以及方法<br>
+
+&emsp;&emsp;如果想要添加属性或者方法，我们可以在函数执行的时候，使用call或者是apply方法改变其作用域，将指向函数的原型<br>
+
+```javascript
+function *demo(){
+    console.log(this)
+    this.num = 100;
+    yield 1;
+    yield 2;
+}
+//拓展方法
+//generator函数虽然不能当做构造函数创建对象，但generator函数的原型方法，可以被generator函数创建的对象(执行generator函数返回的对象)直接使用,这点是比较特殊的
+demo.prototype.hello = function(){
+    console.log('hello',this)
+}
+var d = demo();
+console.log(d.next());//输出：window对象		{value: 1, done: false}
+console.log(d.next());//输出：{value: 2, done: false}
+console.log(d.next());//输出：{value: undefined, done: true}
+d.hello()	//hello demo对象
+console.log(d);//demo对象
+console.log(d.num)//undefined
+
+//为了让this指向generator函数创建的对象(执行generator函数返回的对象),可以在原型对象上执行
+var d = demo.call(demo.prototype);
+console.log(d.next());//输出：window对象		{value: 1, done: false}
+console.log(d.num)//100
+```
+
+<font color=red>**总结：<br>创建：	generator返回状态对象，不能使用new创建		普通函数没有返回值，必须通过new关键字创建<br>相同点：	创建的对象都可以访问原型的属性和方法。<br>为了让generator函数内部的this存储数据，可以让generator函数在原型对象执行。例如：var d = demo.call(demo.prototype);**</font>
 
 
 
 
 
+### <font color=red>9.异步操作</font>
+
+<font color=red>**1.并行，让异步操作一起执行，彼此之间没有依赖关系，我们可以通过Promise.all以及Promise.race来处理，用时为最慢的一个操作所用的时长**</font>(详情请看 第7小节Promise中的all与race)<br>
+
+<font color=red>**2.串行，异步操作要一个接一个的执行，彼此之间有依赖关系（后一个执行依赖前一个执行的结果，管道），用时为所有操作的时长总和**</font><br>代码如下
+
+````javascript
+//定义三个异步操作
+var task1 = data=>new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+        console.log('111',data);
+        resolve('第一个执行完毕');
+    },1000)
+})
+var task2 = data=>new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+        console.log('222',data);
+        reject('第二个执行失败');
+    },2000)
+})
+var task3 = data=>new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+        console.log('333',data);
+        resolve('第三个执行完毕');
+    },3000)
+})
+````
+
+
+
+```javascript
+//借助generator函数
+function *demo(result){
+    //定义暂停状态，执行异步操作
+    console.log('start')
+    //执行第一个异步操作
+    result = yield task1(result);
+    console.log('inner 111',result);
+    //执行第二个异步操作
+    result = yield task2(result);
+    console.log('inner 222',result);
+    //执行第三个异步操作
+    result = yield task3(result);
+    console.log('inner 333',result);
+    console.log('end');
+    return result;
+}
+```
+
+```javascript
+//执行
+//初始化
+var d = demo('操作开始了')
+//监听第一个操作的执行完毕
+d.next().value.then(
+    (data)=>{
+    	console.log('outer 监听第一个操作结果',data);
+        
+    	//将第一个操作的结果，传递给第二个操作去运行
+    	d.next(data).value.then(
+            //成功
+            (data)=>{
+    	    	console.log('outer 监听第二个操作结果',data);
+                
+    			//将第二个操作的结果，传递给第三个操作去运行
+    			d.next(data).value.then(
+            		(data)=>{
+    	    			console.log('outer 监听第三个操作结果',data);
+                        
+                        //将第三个操作结果继续传递下去
+                        d.next(data);
+   					}
+        		)
+   			},
+            //失败
+            (err)=>{
+                console.log('outer 监听第二个操作失败',err);
+                
+    			//执行第三个操作，并传递数据
+    			d.next(data).value.then(
+                	(data)=>{
+                        console.log('outer 监听第三个操作结果',data);
+                        
+                         //将第三个操作结果继续传递下去
+                        d.next(data);
+                    }
+                )
+            }
+        )
+	}
+)
+
+//start
+//Promise {<pending>}对象
+//111 操作开始了
+//outer 监听第一个操作结果 第一个执行完毕
+//inner 111 第一个执行完毕
+//222 第一个执行完毕
+//outer 监听第二个操作失败 第二个执行失败
+//inner 222 第一个执行完毕
+//333 第一个执行完毕
+//outer 监听第三个操作结果 第三个执行完毕
+//inner 333 第三个执行完毕
+//end
+```
+
+上面的写法实在是太复杂了，不是很实用，可以通过co工具（网上有开源的代码）快速启动，并监听结果，简化了启动以及监听的过程。
+
+实现co如下：
+
+```javascript
+
+function co(gen, ...args){
+    //获取参数
+    return new Promise((resolve, reject)=>{
+        //初始化
+        var g = gen(...args);
+        //定义next
+        function doNext(res){
+            //定义本地执行结果
+            let result;
+            //安全执行
+            try{
+                //执行next方法，获取数据
+                result = g.next(res)
+            }catch(e){
+                //中断执行
+                return reject(e);
+            }
+            //当遍历完成，就结束递归
+            if(result.done){
+                //结束
+                return resolve(result.value);
+            }
+            //监听结果递归调用
+            result.value.then(
+            	//成功
+                (data)=>{
+                    //递归
+                    doNext(data);
+                },
+                //失败,就直接中断继续执行
+                (err)=>{
+                    reject(err);
+                }
+            )
+        }
+        //执行next
+        doNext();
+    })
+}
+//通过co工具快速启动，并监听结果
+co(demo, '操作开始了')
+	//监听结果
+	.then(
+		//成功
+    	data=>console.log('success',data),
+    	err=>console.log('fail',err)
+	)
+```
 
 
 
