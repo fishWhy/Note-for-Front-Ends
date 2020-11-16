@@ -468,7 +468,7 @@ var fn = demo.icktBind(obj, 1,2,3);
 fn(4,5,6)
 ```
 
-### 4.对象拓展--源子继承
+### 4.对象拓展--源子继承(create)
 
 ES5对对象拓展了一个静态方法，叫create，实现对对象的继承。<font color=red>注意是对对象的继承，不是对类的继承</font><br>
 
