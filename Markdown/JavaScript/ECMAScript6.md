@@ -2809,3 +2809,567 @@ co(demo, '操作开始了')
 
 
 
+### 10.async与await
+
+async和await是ES2016（E7）中提出的<br>
+
+&emsp;&emsp;可以认为是generator函数的语法糖。<br>
+
+语法糖：对一些复杂操作的简化，可以使我们用更简单的方式去操作，提高了开发效率。<br>
+
+&emsp;&emsp;async表示函数中异步操作，代表了*语法<br>
+
+&emsp;&emsp;await表示等一等的意思，只有当前程序执行完毕之后，后续代码才会执行，代表了yield关键字。<br>
+
+<font color=red>特点：</font><br>
+
+&emsp;&emsp;1.提高了代码的语义化<br>
+&emsp;&emsp;2.await返回值是Promise对象（若async修饰的函数返回值不是一个Promise，函数会使用Promise.resolve(返回值)  生成一个Promise对象返回;如果函数没有返回值，会使用 Promise.resolve(undefined)生成返回值）	<br>	3.await后面允许是任何数据	<br>	&emsp;4.generator表示状态机，async定义的是异步函数<br>
+
+&emsp;&emsp;5.在函数中内置状态函数的启动，直接执行函数即可，不需要通过next方法执行。
+
+```javascript
+//定义函数
+function demo(){
+    console.log('start')
+    new Promise(resolve=>{
+        setTimeout(()=>{
+            console.log('success')
+            resolve();
+        },1000)
+    })
+    console.log('red')
+}
+demo();
+//输出：
+//start
+//red
+//success
+
+//异步函数
+//async表示函数中有异步操作
+async function demo(){
+    console.log('start')
+    //等一等，等异步操作执行完毕，再向下执行。
+    await new Promise(resolve=>{
+        setTimeout(()=>{
+            console.log('success')
+            resolve();
+        },1000)//先执行 new Promise再await
+    })
+    console.log('red')
+    return {a:1,b:2}
+}
+//demo();
+//console.log('1',demo());
+demo().then(data=>console.log('h',data))
+//输出：
+//start
+//success
+//red
+//h {a: 1, b: 2}
+```
+
+
+
+用异步函数代替状态函数（*写成async，yield写成await）
+
+```javascript
+//定义三个异步操作
+var task1 = data=>new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+        console.log('111',data);
+        resolve('第一个执行完毕');
+    },1000)
+})
+var task2 = data=>new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+        console.log('222',data);
+        resolve('第二个执行成功');
+    },2000)
+})
+var task3 = data=>new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+        console.log('333',data);
+        resolve('第三个执行完毕');
+    },3000)
+})
+
+//用异步函数代替状态函数（*写成async，yield写成await）
+async function demo(result){
+    //定义暂停状态，执行异步操作
+    console.log('start')
+    //执行第一个异步操作
+    result = await task1(result);
+    console.log('inner 111',result);
+    //执行第二个异步操作
+    result = await task2(result);
+    console.log('inner 222',result);
+    //执行第三个异步操作
+    result = await task3(result);
+    console.log('inner 333',result);
+    console.log('end');
+    return result;
+}
+
+//异步函数的执行跟普通函数一样
+//generator函数需要手动启动，手动执行，	async异步函数会自动化的执行
+//之后demo函数完全执行完，.then才会监听。
+demo()
+	//监听结果
+	.then(
+		//成功
+    	data=>console.log('outer',data),
+    	//失败
+    	err=>console.log('outer',err)
+	)
+
+//start
+//111 undefined
+//inner 111 第一个执行完毕
+//222 第一个执行完毕
+//inner 222 第二个执行成功
+//333 第二个执行成功
+//inner 333 第三个执行完毕
+//end
+//outer 第三个执行完毕
+```
+
+当程序执行到await的时候，会交出程序的控制权，只有当异步操作完毕之后，后续的代码才会执行。<br>
+
+&emsp;&emsp;如果await后面出现了其他数据，会返回一个监听resolved状态的promise对象<br>
+
+&emsp;&emsp;如果函数中出现了错误，会将错误信息追加到错误对列中。<br>
+
+返回对象<br>
+
+&emsp;&emsp;await返回值是一个promise对象<br>
+
+&emsp;&emsp;&emsp;&emsp;可以使用then方法监听成功时候状态。<br>
+
+&emsp;&emsp;&emsp;&emsp;可以通过catch方法监听失败时候的状态。<br>
+
+&emsp;&emsp;await与yield一样：<br>
+
+&emsp;&emsp;&emsp;&emsp;await只能出现在async中		yield只能出现在generator函数中<br>
+
+```javascript
+//await返回结果
+async function demo1(){
+    console.log('start')
+    //var result = await 100，等价方式 var result = await Promise.resolve(100)
+    var result = await 100
+    console.log(result);
+    console.log('end')
+}
+demo1();
+//输出：
+//start
+//100
+//end
+
+async function demo2(){
+    console.log('start')
+    var result = await new Promise(resolve=>{
+        setTimeout(()=>{
+            console.log('success');
+            resolve('hello')
+        },1000)
+    })
+    console.log(result);
+    console.log('end')
+}
+demo2();
+//start
+//success
+//hello
+//end
+```
+
+<font color=red>await会交出程序控制权，类似异步，后面的语句会继续执行</font>
+
+```javascript
+//await会交出程序控制权，类似异步，后面的语句会继续执行
+async function demo(){
+    console.log('start')
+    await 100;
+    console.log('end')
+}
+demo()
+console.log('outer');
+//start
+//outer
+//end
+```
+
+### 面试题
+
+<font color=red>**首先执行同步的， 再执行伪异步的(交出控制权的)，最后执行异步操作（例如setTimeout，即使setTimeout是0秒也是最后执行的）。**</font>
+
+我认为：在同步的执行完后，伪异步的（交出控制权的）执行顺序，按照在执行时交出控制权的顺序执行，一般先交出控制权的先执行。在碰到async中的await, new Promise中的resolve与reject执行时都会交出控制权。
+
+这些交出控制权的(伪异步的)内部也是通过同步的方法实现的(很像观察者模式)，对应部分执行完了才会执行它们。
+
+```javascript
+setTimeout(function(){
+    console.log(111);
+},0)
+var p = new Promise(resolve=>{
+    console.log(222);
+    resolve();
+})
+//监听
+p.then(data=>{
+    console.log(333)
+})
+let demo = async function(){
+    console.log(444);
+    await 100;
+    console.log(555);
+}
+demo().then(data=>{
+    console.log(666);
+})
+console.log(777);
+//输出：
+//222
+//444
+//777
+//333
+//555
+//666
+//111
+
+//首先执行同步的， 再执行交出控制权的(伪异步)，最后执行setTimeout这种异步。
+//new Promise(...)时其中的代码是同步执行的，async await, p.then与demo.then是伪异步的。
+//p.then只有new Promise对象执行完成后才会执行。
+//demo.then只有demo函数执行完后才会执行 async await会交出程序的控制权。
+```
+
+```javascript
+setTimeout(function(){
+    console.log(111);
+},0)
+
+let demo = async function(){
+    console.log(444);
+    await 100;
+    console.log(555);
+    await 200;
+    console.log(888);
+    await 300;
+    console.log(999);
+}
+demo().then(data=>{
+    console.log(666);
+})
+
+
+var p = new Promise(resolve=>{
+    console.log(222);
+    resolve();
+})
+//监听
+p.then(data=>{
+    console.log(333)
+}).then(data=>{
+    console.log('a')
+}).then(data=>{
+    console.log('b')
+})
+console.log(777);
+//输出：
+//444
+//222
+//777
+//555
+//333
+//888
+//a
+//999
+//b
+//666
+//111
+```
+
+```javascript
+//3 1 7 9      4 2 8    5 6 
+function testSomething(){
+    console.log(111,'执行testSomething')
+    return 'testSomething'
+}
+async function testAsync(){
+    console.log(222,'执行testAsync');
+    return Promise.resolve('hello async')
+}
+async function test(){
+    console.log(333,'test start...');
+    const v1 = await testSomething();
+    console.log(444,v1);
+    const v2 = await testAsync();
+    console.log(555,v2);
+    console.log(666,v1,v2);
+}
+test();
+var promise = new Promise((resolve)=>{
+    console.log(777,'promise start..');
+    resolve('promise');
+});
+promise.then((val)=>console.log(888,val));
+console.log(999,'test and...')
+
+//3 1 7 9 4 2 8 2 a 5 6
+```
+
+
+
+
+
+### 11.类
+
+在ES6中实现了类。语法：class类名{}<br>
+
+&emsp;&emsp;ES6之前定义类的方式：functio People(title){this.title=title;}<br>
+
+在类中可以定义三类数据:<br>
+
+&emsp;&emsp;第一种实例数据：<br>
+
+&emsp;&emsp;&emsp;&emsp;可以通过constructor构造函数定义自身属性或者方法，这类数据会被当前实例化对象所访问。<br>
+
+&emsp;&emsp;第二种原型数据：<br>
+
+&emsp;&emsp;&emsp;&emsp;我们直接在类体中定义原型方法即可。<br>
+
+&emsp;&emsp;&emsp;&emsp;如果要定义原型属性数据，则必须要使用get,set设置特性的方式来定义：get取值器，set赋值器<br>
+
+&emsp;&emsp;&emsp;&emsp;由于对数据设置了特性，在查看对象的时候，这些数据将展示在自身。<br>
+
+&emsp;&emsp;第三种数据：静态数据（通过类直接访问，而实例化对象是不能访问的）<br>
+
+&emsp;&emsp;&emsp;&emsp;定义静态数据的方式有两种：<br>
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;1.直接在类体中，在数据的前面加上static关键字即可。<br>
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;2.在类体的外部，直接为类添加数据。<br>
+
+&emsp;&emsp;&emsp;&emsp;区别:<br>
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;在类体中添加的静态数据			设置了特性<br>
+
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;在类体外部添加的静态数据		没有设置特性<br>
+
+```javascript
+//定义类
+class Book{
+    //构造函数
+    constructor(title,price){
+        //存储数据
+        //实例数据
+        this.title = title;
+        this.price = price;
+        this.color = ['red', 'green', 'blue']
+    }
+    
+    //原型数据
+    //原型方法
+    getTitle(){
+        console.log(this.title);
+    }
+    getPrice(){
+        console.log(this.price)
+    }
+    //原型属性，设置了特性，因此在实例对象自身可以看到
+    get num(){
+        return this._num;
+    }
+    set num(val){
+        this._num = val;
+    }
+    
+    get arr(){
+        return this._arr;
+    }
+    set arr(val){
+        this._arr = val;
+    }
+    
+    //静态数据
+    static get writer(){
+        return 'Mr Yang';
+    }
+    static getWriter(){
+        return this.writer;
+    }
+}
+//在类的外部，静态数据通过点语法定义
+Book.msg = 'hello';
+Book.getMsg = function(){
+    return this.msg;
+}
+
+//实例化
+var b1 = new Book('javascript设计模式', 59)
+var b2 = new Book('面试题', 60)
+b1.num = 200;
+b1.arr = [1,2,3]
+b2.arr = [1,2,3]
+console.log(b1, b2)
+console.log(b1.color === b2.color);			//false
+console.log(b1.getTitle === b2.getTitle);	//true
+console.log(b1.arr === b2.arr);				//false
+
+//实例对象无法访问静态属性,例如b1.writer返回undefined.
+//静态属性通过类来访问
+console.log(Book.writer, Book.msg, Book.getWriter(), Book.getMsg());
+```
+
+### 12.继承
+
+
+
+```javascript
+//定义类
+class Book{
+    //构造函数
+    constructor(title,price){
+        //存储数据
+        //实例数据
+        this.title = title;
+        this.price = price;
+        this.color = ['red', 'green', 'blue']
+    }
+    
+    //原型数据
+    //原型方法
+    getTitle(){
+        console.log(this.title);
+    }
+    getPrice(){
+        console.log(this.price)
+    }
+    //原型属性，设置了特性，因此在实例对象自身可以看到
+    get num(){
+        return this._num;
+    }
+    set num(val){
+        this._num = val;
+    }
+    
+    get arr(){
+        return this._arr;
+    }
+    set arr(val){
+        this._arr = val;
+    }
+    
+    //静态数据
+    static get writer(){
+        return 'Mr Yang';
+    }
+    static getWriter(){
+        return this.writer;
+    }
+}
+//在类的外部，静态数据通过点语法定义
+Book.msg = 'hello';
+Book.getMsg = function(){
+    return this.msg;
+}
+
+
+//继承
+class JsBook extends Book{
+    //重写属性和方法
+    //重写构造函数
+    constructor(title,price,score){
+        //通过super关键字实现构造函数继承
+        super(title,price);
+        //新的属性
+        this.score = score;
+    }
+    //重写原型属性
+    get time(){
+        return 2020;
+    }
+    getTime(){
+        return '2020-1'
+    }
+}
+//创建js书
+var jb = new JsBook('数学书',60,100)
+jb.getPrice()
+console.log(jb);
+console.log(jb.time)
+jb.getTime()
+```
+
+### 13.编译ES6
+
+<font color=red>随着es6，es6+等新标准的出现，为了有更好的开发体验而要使用这些新特性，但是在浏览器中又不能直接运行，所以**我们就需要一个编译工具来将代码变异成浏览器支持的版本，这就需要babel编译器。**</font><br>
+
+安装node之后，可以全局安装babel指令：npm install -g babel-cli<br>
+
+配置.babelrc文件：<br>
+
+&emsp;&emsp;通过presets配置项定义编译器<br>
+
+```javascript
+//ES6=>2015
+{
+    "presets":["es2015"],
+    "plugins":[]
+}
+```
+
+&emsp;&emsp;安装es6的babal插件： npm install babel-preset-es2015 (在项目目录中运行)<br>
+
+编译文件：<br>
+
+&emsp;&emsp;输出到控制台 babel文件<br>
+
+&emsp;&emsp;输出到文件中 babel文件 --out-file文件名<br>
+
+
+
+如下例
+
+原始：
+
+```javascript
+//  .\01.js文件		ES6语法 
+var add = (...args) =>{
+    console.log(arguments);
+}
+```
+
+编译文件
+
+```javascript
+babel .\01.js --out-file ./dist/01.js
+```
+
+编译后：
+
+编译后的代码也说明了在ES6中不能在函数中使用类数组arguments的原因(因为编译后将arguments变成了_arguments， _arguments是函数外部的)。而在ES6中使用的三个点语法，将args转成了一个数组。
+
+```javascript
+//	/dist/01.js文件		ES5语法
+"use strict"
+var _arguments = arguments;
+var add = function add(){
+    for(var _len = arguments.length, args=Array(_len),_key=0;_key<_len;_key++){
+        args[_key] = arguments[_key];
+    }
+    console.log(_arguments)
+}
+```
+
+
+
+通过将ES6中定义类的代码编译成ES5中的，查看ES5中对应代码，可以总结以下几点：
+
+1.ES6中的类在编译后是一个  闭包  安全  特性类。<br>2.在类的内部和外部定义静态属性的区别，类的外部没有设置特性，类的内部设置了特性。<br>
+
+3.ES6中的继承是一个  特性  寄生  组合式  继承<br>
+
