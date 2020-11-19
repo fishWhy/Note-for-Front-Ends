@@ -376,6 +376,128 @@ document.body.appendChild(img2)
 
 
 
+### ES Module规范
+
+ES Module是在ES6中提出的，但是被纳入了ES2016（ES7）中。<br>
+
+引入模块：通过import引入（css资源可以直接通过import引入，import 'css地址'）<br>
+
+&emsp;&emsp;import * as M from "			引入所有的接口，并存储在M命名空间下<br>
+
+&emsp;&emsp;import {} from "					引入某些接口，可以直接使用接口<br>
+
+&emsp;&emsp;import M from "				   引入默认接口<br>
+
+暴露接口：通过export 或者 export default暴露：<br>
+
+&emsp;&emsp;export				暴露接口，可以被前两种引入接口的方式引入<br>
+
+&emsp;&emsp;export default	暴露默认接口，可以被第三种引入接口的方式引入<br>
+
+编译ES6 | ES7也需要加载机：babel-loader编译器@babel/presets-es2015, @babel/presets-env<br>
+
+
+
+案例如下：
+
+demo.js文件：
+
+```javascript
+//定义数据和方法
+export let color = 'red'
+export let arr = [1,2,3]
+export function add(a, b){
+    return a+b;
+}
+//默认接口
+export default {
+    msg: 'hello',
+    num: 100
+}
+```
+
+style.css文件：
+
+```javascript
+body, html{
+    height: 100%;
+    background-color: yellow;
+}
+```
+
+main.js文件引入demo.js中的数据与方法，以及引入style.css中的样式
+
+```javascript
+//引入所有接口
+import * as Demo from './demo'
+console.log(Demo);
+或
+//引入某些接口
+import {color, add} from './demo'
+console.log(color, add)// 
+或
+//引入默认接口
+import Demo from './demo'
+console.log(Demo)	//输出：{ msg: 'hello',num: 100}
+或
+//引入样式
+//import * as Demo from './style.css'; 
+//console.log(Demo);//空对象
+//由于引入的目的是为了引入样式不作为模块使用，因此可以简写成 import './style.css'让./style.css中定义样式起作用
+import './style.css'
+```
+
+
+
+使用Webpack编译ES6时，webpack.config.js写成如下的型式：
+
+<font color=red>（webpack4.0之前，必须写上进行编译的配置，要不然ES6语法不起作用）</font>
+
+```javascript
+let path = require('path')
+//commonjs规范（因为webpack是在node下运行的）
+module.exports = {
+    //处理模式
+    //development表示开发模式，代码不会压缩
+    //producetion表示发布模式，代码会压缩（默认）
+    mode:'development',
+    //入口
+    entry: './main.js',
+    //发布
+    output: {
+        //文件名称
+        filename: './demo.js'
+    },
+    //模块
+    module:{
+        //加载机
+        rules: [
+             //每一个成员代表一个加载机 !
+            //css加载机
+            {
+                test : /\.css$/,
+                //多个加载机
+                use: ['style-loader','css-loader']
+            },
+            //编译es6
+            //webpack4.0之前，必须写上下面这段话进行编译，要不然ES6语法不起作用
+            {
+                //test: /\.es$/
+                test: /\.js$/,
+                loader: 'babel-loader',
+                // 编译时包括node_modules文件夹下的文件，不包括 node_modules文件夹下的文件
+                include: path.join(process.cwd(),'./modules/'),
+                exclude: /node_modules/,
+                options: {
+                    //presets: [@babel/presets-es2016]
+                    presets: [@babel/presets-env]
+                }
+            }
+        ]
+    }
+}
+```
+
 
 
 
