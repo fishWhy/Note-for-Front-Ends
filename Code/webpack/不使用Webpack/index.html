@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webpack</title>
+</head>
+<body>
+    <script src="./modules/a.js"></script>
+    <script src="./modules/b.js"></script>
+    <script src="./modules/c.js"></script>
+    <script>
+        //a.js  b.js    c.js中都定义的有color变量，这里c.js中的color覆盖了a.js与b.js中的color变量。
+        //说明这样引入文件是有问题的
+        //输出：a b c blue
+        console.log(color)
+    </script>
+   
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        for (var i=100; i<=999; i++){
+            /*计算个位、十位、百位的数字*/
+            var a = i % 10;
+            var b = parseInt(i % 100 / 10);
+            // var c = parseInt(i % 100);
+            var c = parseInt(i % 1000/100);
+            /*条件：每一个位数的三次方，它们的和，还等于原来的三位数。*/
+            if (Math.pow(a, 3) + Math.pow(b, 3) + Math.pow(c, 3) === i){
+                console.log(a, b, c, i)
+            }
+            // console.log(c,b,a)
+        }
+    </script>
+</body>
+</html>
