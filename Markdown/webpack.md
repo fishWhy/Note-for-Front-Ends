@@ -169,7 +169,9 @@ module.exports = {
 
 
 
-### 服务器（代码没跑通，估计是webpack与webpack-dev-server版本不匹配问题）
+### 服务器
+
+（代码没跑通，估计是webpack与webpack-dev-server版本不匹配问题）
 
 webpack没有内置服务器，我们需要安装webpack-dev-server模块<br>
 
@@ -497,12 +499,6 @@ module.exports = {
     }
 }
 ```
-
-
-
-
-
-
 
 
 

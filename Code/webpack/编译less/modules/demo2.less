@@ -1,0 +1,19 @@
+//定义变量
+// @color: red;
+// @bg: #00f;
+// @space: 20px;
+@color: blue;
+@bg: red;
+@space: 40px;
+//写样式
+div{
+    //可以使用运算
+    padding: @space/2 @space*1.5;
+    font-size: @space;
+    background: @bg;
+    span{
+        color: @color;
+        margin: 0 @space/2;
+    }
+}
+
