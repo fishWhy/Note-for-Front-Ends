@@ -1,5 +1,4 @@
 ## FC
-&emsp;&emsp;<br>
 FC的全称是:Formatting Contexts(格式化上下文)，是W3C CSS2.1规范中的一个概念。它是页面中的一块渲染<font color='red'>区域</font>，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用。<br>
 常见的FC有：<br>
 &emsp;&emsp;BFC(Block Formatting Contexts):块级格式化上下文。<br>
