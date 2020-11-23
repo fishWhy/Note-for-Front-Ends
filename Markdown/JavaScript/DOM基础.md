@@ -1,15 +1,17 @@
 # DOM
 DOM (Document Object Model,文档对象模型)描述了一个层次化的节点树，允许开发人员添加，移除和修改页面的某一部分。这使得JavaScript操作HTML，不是在操作字符串，而是在操作节点，极大地降低了编码难度。DOM对很多东西做了抽象提供了丰富的API：取得元素，css样式，事件，运动，元素尺寸位置，节点操作等等。
 
-    <div id='app'>hello ickt</div>
-    
-    <script>
-        //操作dom
-        var app = document.getElementById('app');
-        //修改内容
-        app.innerHTML = '好好学习';
-    </script>
-    /*这样前台就会显示'好好学习'，而不再显示'hello ickt'*/
+```html
+<div id='app'>hello ickt</div>
+
+<script>
+    //操作dom
+    var app = document.getElementById('app');
+    //修改内容
+    app.innerHTML = '好好学习';
+</script>
+/*这样前台就会显示'好好学习'，而不再显示'hello ickt'*/
+```
 
 ## 1.HTML操作
 document:<font color=red>表示文档（表示整个页面）对象。document对象具有页面几乎所有的方法或者属性。</font><br>
@@ -26,14 +28,18 @@ document:<font color=red>表示文档（表示整个页面）对象。document�
 属性操作方法：
 &emsp;&emsp;读取：getAttribute()<font color=red>可以读取元素自带属性或者自定义属性</font><br>
 &emsp;&emsp;设置： setAttribute()<font color=red>设置元素自带属性或者是自定义属性</font><br>
-### 点语法和getAttribute()，setAttribute区别：
+
+**点语法和getAttribute()，setAttribute区别：**
+
 &emsp;&emsp;1.点语法只能读取或者设置元素的自带有属性，getAttribute(),setAttribute()可以读取元素自带属性或者是自定义属性。
 &emsp;&emsp;2.点语法操作有些属性名需要改名字，getAttribute(),setAttribute()不用该名，是什么就直接书写什么。
 &emsp;&emsp;class -> className &emsp;&emsp; for -> htmlFor<br>
 &emsp;&emsp;rowspan -> rowSpan&emsp;&emsp;colspan->colSpan<br>
 &emsp;&emsp;3.通过点语法得到的style对象，而getAttribute得到的是字符串。<br>
 &emsp;&emsp;4.点语法得到style可以继续打点。而getAttribute()得到的是字符串不能继续打点调用属性。<br>
-#### 总结：<font color=red>除了自定义属性使用getAttribute(),其他所有情况都使用点语法。</font>
+
+**总结：<font color=red>除了自定义属性使用getAttribute(),其他所有情况都使用点语法。</font>**
+
 <br>
 
 ## 3.样式操作
@@ -54,8 +60,10 @@ css操作就是更改元素的样式。<br>
 
 元素绑定事件：元素.事件名=fn。可以绑定匿名函数或者函数名（千万不要在函数名后面书写小括号）。<br>
 注意：<br>
-### &emsp;&emsp;<font color=red>我们在body中书写js时，需要将js书写在所有html元素之后。当html元素加载完毕之后再执行js。<br>
-### &emsp;&emsp;如果js书写在head标签中，必须书写onload事件，window.onload表示当html元素加载完毕之后执行内部的语句。</font>
+
+&emsp;&emsp;<font color=red>**我们在body中书写js时，需要将js书写在所有html元素之后。当html元素加载完毕之后再执行js。**</font><br>
+
+&emsp;&emsp;<font color=red>**如果js书写在head标签中，必须书写onload事件，window.onload表示当html元素加载完毕之后执行内部的语句。**</font>
 
 ## 5.getElementsByTagName
 getElementById()和getElementsByTagName()都是兼容IE低版本。全线兼容。
@@ -128,31 +136,33 @@ getElementById()和getElementsByTagName()都是兼容IE低版本。全线兼容�
                 p2[this.index].style.backgroundColor = 'pink';
             }
         }
-        
-        
-        //排它思想
-         for (var i = 0,len = p1.length;i<len;i++){
-            p1[i].index = i;
-            p1[i].onclick = function(){
-                // 其他的都清除样式
-                 for (var j = 0,len = p2.length;j<len;j++){
-                     p2[this.index].style.backgroundColor = 'transparent'
-                 }
-                //设置选中的p2背景变成pink色
-                p2[this.index].style.backgroundColor = 'pink';
-            }
-        }
-        //使用排它思想的前提条件是，两个容器的元素个数要一致。
-        
-        
-    </script>
-    
+
+
+​        
+​        //排它思想
+​         for (var i = 0,len = p1.length;i<len;i++){
+​            p1[i].index = i;
+​            p1[i].onclick = function(){
+​                // 其他的都清除样式
+​                 for (var j = 0,len = p2.length;j<len;j++){
+​                     p2[this.index].style.backgroundColor = 'transparent'
+​                 }
+​                //设置选中的p2背景变成pink色
+​                p2[this.index].style.backgroundColor = 'pink';
+​            }
+​        }
+​        //使用排它思想的前提条件是，两个容器的元素个数要一致。
+
+
+​        
+​    </script>
+
 
 
 
 &emsp;&emsp;排它：选中的元素改变其它元素，让其它元素变成原状。<br>
 
-    
+
     <div id="app1">
         <p>item1</p>
         <p>item2</p>
@@ -183,9 +193,10 @@ getElementById()和getElementsByTagName()都是兼容IE低版本。全线兼容�
             }
         }
         //使用排它思想的前提条件是，两个容器的元素个数要一致。
-        
-        
-    </script>
+
+
+​        
+​    </script>
 
 ## 8.样式的计算
 &emsp;&emsp;<font color=red>计算后的样式：指的是HTML元素在CSS各种选择器综合作用下，得到的最终样式。</font><br>
@@ -266,7 +277,8 @@ IE 6, 7,8方法:<br>
     
     </script>
 
-    
+
+​    
 
 
 
