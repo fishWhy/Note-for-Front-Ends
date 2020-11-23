@@ -166,7 +166,7 @@ div{
 }
 ```
 
-### 
+
 
 ### 属性嵌套
 
@@ -685,6 +685,145 @@ sass支持if条件语句，语法和js中的if条件语句类似<br>
 @mixin arrow($w:10px, $c:#000, $dir: top, $l:$w){
     border:$w solid transparent;
     border-#($dir)-color:$c;
+    font-size:0;
+    width:0;
+    //判断
+    @if $dir == top or $dir == bottom {
+        border-top-width:$l;
+        border-bottom-width:$l;
+    } @else{
+        border-left-width:$l;
+        border-right-width:$l;
+    }
+}
+strong{
+    @include arrow;
+}
+h1{
+    @include arrow(20px, red, left, 100px);
+}
+span{
+    display: block;
+    @include arrow(100px,green,bottom,20px);
+}
+```
+
+### 循环语句
+
+和js中的for循环一样，sass也支持循环语句，也用@for关键字定义，有两种语法<br>
+
+&emsp;&emsp;@for $i from start through end{}<br>
+
+&emsp;&emsp;@for $i from start to end()<br>
+
+&emsp;&emsp;@for:表示循环语句关键字			$i:表示循环变量		from,through,to:都是循环关键字		start:表示循环的起始值			end：表示循环的终止值			默认每次循环增量都是1<br>
+
+throught和to的区别是：<br>
+
+&emsp;&emsp;throught:最后一次循环包含end值<br>
+
+&emsp;&emsp;to:最后一次循环不包含end值<br>
+
+<font color=red>循环语句通过{}定义了代码块，因此循环语句中定义的变量，外部无法使用。</font><br>
+
+```html
+<div>
+    <div class='item-1'>item-1</div>
+    <div class='item-2'>item-2</div>
+    <div class='item-3'>item-3</div>
+    ...
+    <div class='item-100'>item-100</div>
+</div>
+```
+
+
+
+```scss
+div{
+    height:20px;
+    margin-bottom:10px;
+}
+//基础颜色
+$color: #060402;
+//循环语句设置，循环内部变量，外部无法使用
+@for $i from 1 through 100 {
+    .item-#{$i}{
+        background-color: $color*$i;
+    }
+}
+
+//被编译成
+item-1{
+    backgournd-color:#060402;
+}
+...
+item-100{
+    backgournd-color:#ffffc6;
+}
+```
+
+### while循环
+
+在for循环中，增量始终是1，我们无法改变，如果我们想自定义循环增量，可以使用while循环<br>
+
+语法：<br>
+
+&emsp;&emsp;定义循环变量<br>
+
+&emsp;&emsp;@while 循环条件{定义循环体（定义样式）		改变循环变量}<br>
+
+<font color=red>由于循环变量定义在了循环外部，因此在循环外部可以继续使用循环变量。</font><br>
+
+```scss
+//循环变量
+$i:1;
+@while $i<=100{
+    .item-#{$i}{
+        background-color:green;
+    }
+    //更改循环变量
+    $i:$i+4;
+}
+```
+
+
+
+### 枚举循环
+
+由于，for循环：每次循环的增量都是1。而while循环：可以自由的定义循环增量，但是必须是有规律的。<br>
+
+如果想循环一个没有规律的聚合数据，可以使用枚举循环。<br>
+
+语法：<br>
+
+&emsp;&emsp;@each $i in 枚举体{}<br>
+
+&emsp;&emsp;&emsp;&emsp;@each:枚举循环关键字    @i:循环变量    in:枚举关键字    枚举体:多个个体用逗号隔开<br>
+
+<font color=red>注意：如果枚举的个体命中了sass内置的数据变量，如red，green，blue等，使用的时候，要添加引号。</font>
+
+```scss
+@each $i in aaa,bbb,ccc,ddd,'red','green','blue'{
+    .#{$i}{
+        background-color:red;
+    }
+}
+```
+
+### 三元运算符
+
+在js中，?:是一个三元运算符（是对if语句的简写）<br>
+
+sass提供了if方法，可以实现该功能<br>
+
+if(condition, trueValue, falseValue)
+
+​		condition值为真，结果是trueValue		condition值为假，结果是falsevalue<br>
+
+```scss
+$num = 6;
+div{
+    width:if($num>5,200px,500px);
 }
 ```
 
