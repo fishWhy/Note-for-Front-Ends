@@ -1,0 +1,57 @@
+$color: red;
+.box {
+    .demo{
+        p{
+            //局部变量
+            $size: 30px;
+            color: $color;
+            font-size: $size;
+            margin: {
+                top: 20px;
+                right: 30px;
+                bottom: 40px;
+                left: 30px;
+            }
+        }
+    }
+}
+
+.test{
+    //加减法
+    // width: 1in-1px;//被编译成0.98958in
+    // height: 1in -1;//被编译成0in
+
+    //乘法
+    // width: 10px*5;//被编译成50px
+
+    //除法
+    // width: 20px/5;//被编译成20px/5,因为编译器认为此时也是像font属性属性值那样是字号与行高之比，想执行必须满足三个条件之一
+    //除法执行的三个条件
+
+    //width: (20px/5);//被编译成4px
+
+    //$size: 20px;
+    //width: $size/5;//被编译成4px
+    
+    width: 10px/2 + 5px;//被编译成10px
+    // width: (20px/5px);//被编译成4
+    // width: (20/5px);//报错，无法编译
+
+}
+
+testColor{
+
+    $color1: #5588aa;
+    $color2: #229933;
+    $color3: rgba(100,200,30,0.5);
+    $color4: rgba(50,100,30,0.5);
+    // color: $color4;
+
+
+    // color: $color4 - $color3;
+    // color: #001100+#220033; //#221133
+    // color: #001100*2;       //#002200
+    color: $color4 + $color3;
+
+}
+
