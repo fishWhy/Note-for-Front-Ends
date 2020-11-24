@@ -48,10 +48,10 @@ testColor{
     // color: $color4;
 
 
-    // color: $color4 - $color3;
-    // color: #001100+#220033; //#221133
-    // color: #001100*2;       //#002200
-    color: $color4 + $color3;
+    // color: $color4 - $color3;//被编译成rgba(0, 0, 0, 0.5)
+    // color: #001100+#220033; //被编译成#221133
+    // color: #001100*2;       //被编译成#002200
+    color: $color4 + $color3;  //被编译成rgba(150, 255, 60, 0.5);
 
 }
 
