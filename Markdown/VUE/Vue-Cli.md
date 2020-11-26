@@ -1,4 +1,4 @@
-## Vue-Cli
+Vue-Cli
 
 如果你在开发大型项目, 那么你需要, 并且必然需要使用Vue CLI
 **使用Vue.js开发大型应用时，我们需要考虑代码目录结构、项目结构和部署、热加载、代码单元测试等事情。**
@@ -123,9 +123,13 @@ new Vue({
 
 
 
-### 3.VUE启动流程
+### 3. Vue-Cli2启动流程
 
-#### npm run dev
+在开发过程运行npm run dev可启动vue项目。在项目开发完成后运行npm run build，进行打包，打包后就可以发布。
+
+对webpack不熟悉的可以看看我之前记录的webpack的笔记，是在 “VUE/webpack” 中的那版。
+
+#### 3.1 npm run dev
 
 ![1606311650663](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606311650663.png)
 
@@ -227,7 +231,132 @@ HelloWorld 中主要是一些 Vue 介绍显示内容。
 
  ![img](https://images2018.cnblogs.com/blog/616891/201808/616891-20180817152758723-1616261363.png)
 
-#### npm run build
+#### 3.2 npm run build
 
 ![1606311700852](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606311700852.png)
+
+#### 3.3 路径起别名(修改webpack.base.conf.js)
+
+可参考：<https://blog.csdn.net/daodaoke/article/details/107636361>
+
+下面从webpack的角度来讲解怎么在webpack.conf.js中进行配置，在Vue-cli项目的webpack.base.conf.js中的操作类似。
+
+##### 1、resolve.alias
+
+resolve.alias 配置项通过别名来把原导入路径映射成一个新的导入路径。例如使用以下配置：
+
+```javascript
+resolve: {
+    alias: {
+      $css: resolve(__dirname, 'src/css')
+    }
+ }
+12345
+```
+
+这样在js文件里面引用的时候可以简写文件路径
+
+```javascript
+import '$css/index.css'
+1
+```
+
+##### 2、extensions
+
+配置省略文件路径的后缀名
+
+```javascript
+ resolve: {
+    // 配置省略文件路径的后缀名
+    extensions: ['.js', '.json', '.jsx', '.css']
+  }
+1234
+```
+
+这样在js文件里面引用的时候可以省略后缀名， 个人不推荐使用，比如同一个目录有不同类型的同名文件，只会匹配第一个
+
+```javascript
+import '$css/index'
+1
+```
+
+##### 3、modules
+
+resolve.modules 配置 Webpack 去哪些目录下寻找第三方模块，默认是只会去 node_modules 目录下寻找。 可指定目录，提升速度，默认就是 modules: [“node_modules”]，一般可不写
+
+##### 完整代码示例
+
+webpack.base.conf.js或webpack.conf.js
+
+```javascript
+const { resolve } = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  entry: './src/js/index.js',
+  output: {
+    filename: 'js/[name].js',
+    path: resolve(__dirname, 'build')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  plugins: [new HtmlWebpackPlugin()],
+  mode: 'development',
+  // 解析模块的规则
+  resolve: {
+    // 配置解析模块路径别名: 优点简写路径 缺点路径没有提示
+    alias: {
+      $css: resolve(__dirname, 'src/css')
+    },
+    // 配置省略文件路径的后缀名
+    extensions: ['.js', '.json', '.jsx', '.css'],
+    // 告诉 webpack 解析模块是去找哪个目录
+    modules: [resolve(__dirname, '../../node_modules'), 'node_modules']
+  }
+};
+```
+
+
+
+### 4.Vue Cli3
+
+vue-cli 3 与 2 版本有很大区别
+
+​		 vue-cli 3 是基于 webpack 4 打造，vue-cli 2 还是 webapck 3
+
+​		**vue-cli 3 的设计原则是“0配置”，移除的配置文件根目录下的，build和config等目录**
+
+​		 vue-cli 3 提供了 vue ui 命令，提供了可视化配置，更加人性化
+
+​		 移除了static文件夹，新增了public文件夹，并且index.html移动到public中
+
+#### 创建项目流程
+
+![1606392091586](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606392091586.png)
+
+#### 项目目录结构
+
+![1606392113695](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606392113695.png)
+
+#### 原先一大堆的webpack配置的位置
+
+node_module文件夹下：
+
+![1606392197315](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606392197315.png)
+
+#### 自定义配置：起别名
+
+![1606392283449](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606392283449.png)
+
+
+
+### 5. Vue Cli4
+
+<https://www.cnblogs.com/Super-scarlett/p/12495902.html>
 
