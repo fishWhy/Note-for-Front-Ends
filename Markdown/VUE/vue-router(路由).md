@@ -11,7 +11,7 @@
 
 
 
-后端路由阶段，前后端分离阶段，单页面富应用阶段（前端维护一套路由规则）。
+后端路由阶段，前后端分离阶段，单页面富应用阶段（SPA，前端维护一套路由规则）。
 
 **前端路由的核心是：改变URL，但是页面不进行整体的刷新。**
 
@@ -381,7 +381,311 @@ const Home = ()=>import('../components/Home.vue')
 
 
 
+```javascript
+// router/index.js文件
+...
+import Message = ()=>import('../components/message') 
+import News = ()=> import('../components/news')
+...
+//2.定义路由
+const routes = [
+	{
+		path: '/home',
+		component: Home,
+        children:[
+            {
+            	path: 'message',
+                component: Message
+        	},
+             {
+            	path: 'news',
+                component: News
+        	}
+        ]        
+	}
+]
+...
+```
 
+```javascript
+//在定义src/components文件夹下定义home组件
+......
+<router-link to="/home/message">消息</router-link>
+<router-link to="/home/news">新闻</router-link>
+<router-view></router-view>
+......
+```
+
+![1606457826592](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606457826592.png)
+
+
+
+#### 嵌套默认路径
+
+嵌套路由也可以配置默认的路径，配置方式如下：
+
+```javascript
+// router/index.js文件
+//2.定义路由
+const routes = [
+	{
+		path: '/home',
+		component: Home,
+        children:[
+            {
+            	path: 'message',
+                component: Message
+        	},
+             {
+            	path: 'news',
+                component: News
+        	},
+        	{
+        		path: '',
+        		redirect: 'message'
+        	}
+        ]        
+	}
+]
+...
+```
+
+
+
+### 6.传递参数
+
+**准备工作：**
+
+第一步：创建新的组件Profile.vue
+
+```javascript
+//在定义src/components文件夹下定义Profile组件
+...
+```
+
+第二步：配置路由映射
+
+```javascript
+// router/index.js文件
+import Profile = ()=>import('../components/profile') 
+//2.定义路由
+const routes = [
+	{
+		path: '/profile',
+		component: Profile
+    }
+]
+...
+```
+
+第三步：添加跳转的<router-link>
+
+```javascript
+//App.vue文件
+<template>
+	......
+	<router-link to="/profile">档案</router-link>
+	......
+</template>
+...
+```
+
+#### 传递参数的方式
+
+传递参数主要有两种类型: params和query
+**params的类型:**
+		**配置路由格式: /router/:id**
+		传递的方式: 在path后面跟上对应的值
+		传递后形成的路径: /router/123, /router/abc
+
+**query的类型:**
+		配置路由格式: /router, 也就是普通配置
+		传递的方式: 对象中使用query的key作为传递方式
+		传递后形成的路径: /router?id=123, /router?id=abc
+
+
+
+使用<router-link>传递参数：
+
+```javascript
+//App.vue文件
+<template>
+	......
+	<router-link 
+		:to="{
+			path: "/profile/"+123,
+            query:{name:'why',age:18}
+			}">档案</router-link>
+	......
+</template>
+...
+```
+
+使用JavaScript代码传递参数：
+
+```javascript
+//App.vue文件
+...
+export default{
+	...
+	methods: {
+		toProfile(){
+			this.$router.push({
+				path: '/profile/'+123,
+				query: {name: 'why', age:18}
+			})
+		}
+	}
+}
+...
+```
+
+#### 获取参数
+
+获取参数通过$route对象获取
+
+​		在使用了vue-router的应用中，路由对象会被注入每个组件中，赋值为this.$route，并且当路由切换时，路由对象会被更新。
+
+​		通过$route获取传递的信息如下：
+
+```javascript
+//在定义src/components文件夹下定义Profile组件
+...
+<p>params:{{$route.params}}</p>
+<p>query:{{$route.query}}</p>
+...
+```
+
+#### $route和$router的区别
+
+$router为VueRouter实例，想要导航到不同URL，则使用$router.push方法<br>
+
+$route为当前router跳转对象里面可以获取name,path,query,params等<br>
+
+```javascript
+//App.vue文件
+//可以console.log两者，看它们的区别
+...
+export default{
+	name:'profile',
+    mounted(){
+        console.log(this.$router);
+        console.log(this.$route);
+    }
+	...
+}
+...
+```
+
+
+
+### 7.导航守卫
+
+**为什么使用导航守卫**
+
+我们来考虑一个需求: 在一个SPA应用中, 如何改变网页的标题呢?
+		网页标题是通过<title>来显示的, 但是SPA只有一个固定的HTML, 切换不同的页面时, 标题并不会改变.
+		但是我们可以通过JavaScript来修改<title>的内容.window.document.title = '新的标题'.
+		那么在Vue项目中, 在哪里修改? 什么时候修改比较合适呢?
+
+
+
+普通的修改方式:
+		我们比较容易想到的修改标题的位置是每一个路由对应的组件.vue文件中.
+		通过mounted声明周期函数, 执行对应的代码进行修改即可.
+		但是当页面比较多时, 这种方式不容易维护(因为需要在多个页面执行类似的代码).
+
+
+
+有没有更好的办法呢? 使用导航守卫即可.
+什么是导航守卫?
+		**vue-router提供的导航守卫主要用来监听监听路由的进入和离开的.**
+		**vue-router提供了beforeEach和afterEach的钩子函数, 它们会在路由即将改变前和改变后触发.**
+
+
+
+#### 导航守卫使用
+
+我们可以利用beforeEach来完成标题的修改.
+		首先, 我们可以在钩子当中定义一些标题, 可以利用meta来定义
+		其次, 利用导航守卫,修改我们的标题.
+
+```javascript
+// router/index.js文件
+...
+//2.定义路由
+const routes = [
+	{
+		path: '/home',
+		component: Home,
+        children:[...],
+        meta:{
+        	title:'首页'
+        }
+	}，
+	{
+		path: '/about',
+		component: About,
+        children:[...],
+        meta:{
+        	title:'关于'
+        }
+	}，
+	{
+		path: '/profile/:id',
+		component: Profile,
+        children:[...],
+        meta:{
+        	title:'档案'
+        }
+	}
+]
+//3.创建router实例
+const router  = new VueRouter({
+	routes,
+    mode: 'history',
+    linkActiveClass: 'active'
+})
+router.beforeEach((to,from,next)=>{
+    window.document.title = to.meta.title;
+    next()
+})
+...
+```
+
+导航钩子的三个参数解析:
+		to: 即将要进入的目标的路由对象.
+		from: 当前导航即将要离开的路由对象.
+		next: 调用该方法后, 才能进入下一个钩子.
+
+#### 导航守卫补充
+
+补充一:如果是后置钩子, 也就是afterEach, 不需要主动调用next()函数.
+补充二: 上面我们使用的导航守卫, 被称之为全局守卫.
+		路由独享的守卫.
+		组件内的守卫.
+
+更多内容, 可以查看官网进行学习:
+https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E8%B7%AF%E7%94%B1%E7%8B%AC%E4%BA%AB%E7%9A%84%E5%AE%88%E5%8D%AB
+
+### 8.keep-alive遇到vue-router
+
+keep-alive 是 Vue 内置的一个组件，可以使被包含的组件保留状态，或避免重新渲染。
+		它们有两个非常重要的属性:
+		include - 字符串或正则表达，只有匹配的组件会被缓存
+		exclude - 字符串或正则表达式，任何匹配的组件都不会被缓存
+
+router-view 也是一个组件，如果直接被包在 keep-alive 里面，所有路径匹配到的视图组件都会被缓存：
+
+```html
+<keep>
+	<router-view>
+    	<!--所有路径匹配到的视图组件都会被缓存！-->
+    </router-view>
+</keep>
+```
+
+通过create声明周期函数来验证
 
 
 
