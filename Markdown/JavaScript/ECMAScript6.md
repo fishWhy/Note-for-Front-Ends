@@ -1647,7 +1647,7 @@ Promise是将异步写法变成同步写法的规范<br>
 
 三个状态：<br>
 
-&emsp;&emsp;pending 表示操作正在执行		resolved 表示操作执行成功	rejected 表示操作执行失败<br>
+&emsp;&emsp;pending 表示等待状态		resolved 表示操作执行成功	rejected 表示操作执行失败<br>
 
 状态的流向：在Promise中状态有两个方向的流向：<br>
 
