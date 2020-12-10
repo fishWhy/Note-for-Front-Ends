@@ -344,7 +344,7 @@ vue-cli 3 与 2 版本有很大区别
 
 ![1606392113695](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606392113695.png)
 
-#### 原先一大堆的webpack配置的位置
+#### <font color=red>原先一大堆的webpack配置的位置</font>
 
 node_module文件夹下：
 
