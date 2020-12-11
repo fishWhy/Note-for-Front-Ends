@@ -404,7 +404,7 @@ bind通过两项技术实现的<br>
 
 &emsp;&emsp;&emsp;&emsp;作用：改变this指向<br>
 
-&emsp;&emsp;<font color=red>(2)函数柯理化：一个接收多个参数的函数，我们一个一个的传递参数，在函数执行的时候，传递剩余的参数并得到结果。</font><br>
+&emsp;&emsp;<font color=red>(2)**函数柯里化**：一个接收多个参数的函数，我们一个一个的传递参数，在函数执行的时候，传递剩余的参数并得到结果。</font><br>
 
 &emsp;&emsp;作用：增强了函数的适用性。<br>
 
@@ -465,6 +465,37 @@ function demo(){
 var fn = demo.icktBind(obj, 1,2,3);
 fn(4,5,6)
 ```
+
+**柯里化还可以用来优化浏览器版本兼容问题**，如现代浏览器和IE浏览器的事件监听的方法兼容问题：
+
+```javascript
+/*
+* @param    ele        Object      DOM元素对象
+* @param    type       String      事件类型
+* @param    fn         Function    事件处理函数
+* @param    isCapture  Boolean     是否捕获
+*/
+var addEvent = function(ele, type, fn, isCapture) {
+    if(window.addEventListener) {
+
+        ele.addEventListener(type, fn, isCapture)
+
+    } else if(window.attachEvent) {
+
+        ele.attachEvent("on" + type, fn)
+    }
+}
+```
+
+<font color=red>**柯里化是一种思想**</font>
+
+**柯里化（Currying）是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下的参数而且返回结果的新函数的技术。**
+
+由以上定义，柯里化又可理解为部分求值，返回接受剩余参数且返回结果的新函数。想要应用柯里化，我们必须先理解柯里化的作用和特点，这里我总结为以下三点：
+
+- **参数复用 – 复用最初函数的第一个参数**
+- **提前返回 – 返回接受余下的参数且返回结果的新函数**
+- **延迟执行 – 返回新函数，等待执行**
 
 ### 4.对象拓展--源子继承(create)
 
