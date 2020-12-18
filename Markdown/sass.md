@@ -143,7 +143,7 @@ module.exports = {
 
 &emsp;&emsp;&emsp;&emsp;外部选择器类似命名空间，确保选择器名称不会相互覆盖<br>
 
-&emsp;&emsp;<font color=red>嵌套的时候，我们可以通过&符号获取当前选择器。</font><br>
+&emsp;&emsp;<font color=red>嵌套的时候，我们可以通过&符号获取当前选择器。（在设置伪类和伪元素时非常有用）</font><br>
 
 ```less
 div{
@@ -163,8 +163,14 @@ div{
         font-size: 30px;
         text-decoration: none;
     }
+    //添加伪元素
+    &:after{
+        content: -;
+    }
 }
 ```
+
+
 
 
 
