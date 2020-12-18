@@ -114,6 +114,8 @@ String   Number  Boolean  Array  Object  Date  Function  Symbol或使用函数�
 
 ### 8.父子组件的访问方式
 
+#### 
+
 #### 父组件访问子组件
 
 1.$children    
@@ -142,7 +144,7 @@ String   Number  Boolean  Array  Object  Date  Function  Symbol或使用函数�
 
 ![1606301734987](C:\Users\Z\AppData\Roaming\Typora\typora-user-images\1606301734987.png)
 
-
+#### 父子组件的类名要设置的不一样
 
 ### <font color=red>9.编辑作用域</font>
 
