@@ -232,7 +232,71 @@ $color: rgb(0, 153, 255);
         }
     }
 }
+
 ```
+
+知识扩展：
+
+#### !default
+
+```scss
+/* 如果之前没有赋值,则使用默认值 */
+$const: "hello" !default;
+div{
+    const: $const;
+}
+编译为CSS：
+div {
+  const: "hello"; 
+}
+
+/* 如果之前已经赋值,则不再使用默认值 */
+$const: "Hi";
+$const: "hello" !default;
+div{
+    const: $const;
+}
+编译为CSS：
+div {
+  const: "Hi"; 
+}
+```
+
+#### !global
+
+当然 Sass 中我们可以使用 !global 关键词来设置变量是全局的：
+
+```scss
+Sass 代码
+$myColor: red;
+
+h1 {
+  $myColor: green !global;  // 全局作用域
+  color: $myColor;
+}
+
+p {
+  color: $myColor;
+}
+```
+
+现在 p 标签的样式就会变成 green。
+
+将以上代码转换为 CSS 代码，如下所示：
+
+Css 代码
+
+```css
+h1 {
+  color: green;
+}
+
+p {
+  color: green;
+}
+```
+
+
 
 ### 运算（加减乘除）
 
@@ -438,6 +502,10 @@ sass中的混合也是为了复用一组样式<br>
     //@include box-shadow(2px,4px,red,6px 8px green,10px 12px blue);
 }
 ```
+
+#### 函数
+
+<https://www.sass.hk/skill/sass14.html>
 
 
 
