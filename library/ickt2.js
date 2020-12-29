@@ -272,4 +272,11 @@ function removeEvent(dom, type, fn){
 
 
 
+function insertEle() {
+    var oTest = document.getElementsByTagName('div');
+    var newNode = document.createElement("div");
+    oTest.appendChild(newNode);
+}
+
+
 
