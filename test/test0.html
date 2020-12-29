@@ -6,19 +6,20 @@
     <title>Document</title>
 </head>
 <body>
+    <div id="a">
+        <div id="b"></div>
+    </div>
     <script>
-        for (var i=100; i<=999; i++){
-            /*计算个位、十位、百位的数字*/
-            var a = i % 10;
-            var b = parseInt(i % 100 / 10);
-            // var c = parseInt(i % 100);
-            var c = parseInt(i % 1000/100);
-            /*条件：每一个位数的三次方，它们的和，还等于原来的三位数。*/
-            if (Math.pow(a, 3) + Math.pow(b, 3) + Math.pow(c, 3) === i){
-                console.log(a, b, c, i)
-            }
-            // console.log(c,b,a)
+        function appendChildren() {
+            var oTest1 = document.getElementById('a');
+            var newNode1 = document.createElement("div");
+            oTest1.appendChild(newNode1);
+            var oTest2 = document.getElementById('b');
+            var newNode2 = document.createElement("div");
+            oTest2.appendChild(newNode2);
         }
+        appendChildren()
+
     </script>
 </body>
 </html>
