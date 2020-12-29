@@ -1012,7 +1012,7 @@ function Book(title, price){
 //实例化
 var book = new Book('javascript', 10)
 //如果原型的属性方法不希望被遍历，可以设置特性
-Object.defineProperty(Book.prototype,'page'{
+Object.defineProperty(Book.prototype,'page',{
 	value： 100，
     enumerable: false;
 })
@@ -1165,7 +1165,7 @@ console.log(Object.prototype.isPrototypeOf(arr));//输出：true
 console.log(Object.prototype.isPrototypeOf(obj));//输出：true
 ```
 
-#### 让原型属性不可枚举<br>
+#### 让原型属性不可枚举
 
 使用方式：
 
@@ -1227,7 +1227,7 @@ console.log(book.getTitle());
 
 #### 对象禁拓
 
-对象有四个操作：增（拓展，增加）删（删除）该（修改）查（查看）<br>
+对象有四个操作：增（拓展，增加）删（删除）改（修改）查（查看）<br>
 
 对象的禁拓（禁止拓展）就是说<br>
 
