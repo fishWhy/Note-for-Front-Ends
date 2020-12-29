@@ -1969,7 +1969,7 @@ race方法用于监听多个Promise对象<br>
 
 &emsp;&emsp;如果有一个请求执行成功，就会执行success方法<br>
 
-&emsp;&emsp;如果有一个请求事变，则会执行fail方法<br>
+&emsp;&emsp;如果有一个请求失败，则会执行fail方法<br>
 
 &emsp;&emsp;返回值是状态改变的时候传递的数据<br>
 
@@ -2059,6 +2059,16 @@ p1.then(
     err=>console.log('fail',err)
 )
 //fail 200
+
+或
+let test = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('success')
+    }, 1000)
+})
+let p = Promise.resolve(test)
+console.log(p === test)   //true
+从结果上看：将一个promise对象传递给Promise.resolve()方法会被直接返回。
 ```
 
 ```javascript
