@@ -23,7 +23,8 @@
             /* background-color: pink; */
             /* 触发BFC */
             display: inline-block;
-            /* 此时容器应该比原有的宽度多出一个边距来，我们可以修改margin来解决 */
+            /* 此时容器应该比原有的宽度多出一个边距来，我们可以修改margin来解决 
+            当元素不存在width属性或者width: auto时，负值margin会增加元素的宽度*/
             margin-right: -20px;
         }
         /* 根据w = n * iw + ( n-1 ) * m,计划每行排5个盒子，盒子间的距离为20px，
