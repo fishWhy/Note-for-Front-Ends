@@ -138,6 +138,14 @@ index.html文件引入经过webpack处理过的文件：
 
 
 
+#### require和require.context 的参数必须是字面量
+
+传递给require的参数必须是字面量(literal)不能直接传递变量，否则webpack的require不工作。 传递给 require.context 的参数必须是字面量(literal)
+
+ 该问题可参考：https://webpack.docschina.org/guides/dependency-management/和 https://www.coder.work/article/3937181 和https://segmentfault.com/a/1190000019495695
+
+
+
 <font color=red>**前端模块化开发，一定要使用相对路径，引入模块**</font>
 
 
