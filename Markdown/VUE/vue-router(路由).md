@@ -678,11 +678,11 @@ keep-alive 是 Vue 内置的一个组件，可以使被包含的组件保留状�
 router-view 也是一个组件，如果直接被包在 keep-alive 里面，所有路径匹配到的视图组件都会被缓存：
 
 ```html
-<keep>
+<keep-alive>
 	<router-view>
     	<!--所有路径匹配到的视图组件都会被缓存！-->
     </router-view>
-</keep>
+</keep-alive>
 ```
 
 通过create声明周期函数来验证
